@@ -11,6 +11,7 @@ dist/
 *-qa-console.log
 *-qa.html
 source-page.html
+analysis-*-dom.html
 .edge-*/
 
 # Local comparison and implementation screenshots

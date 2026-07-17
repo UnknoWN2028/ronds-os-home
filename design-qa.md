@@ -1,66 +1,62 @@
 **Comparison Target**
 
-- Product style source: `home-with-video-entry.png` (existing light-theme home shell).
-- Information architecture source: user-provided `智慧视频监控` screenshot (three-column monitoring structure).
-- Final implementation screenshot: `video-monitoring-unified.png`.
-- Route: `/video-monitoring`.
-- Viewport: 2048 x 1098.
-- State: monitoring menu selected, default 2 x 2 video layout, pending-alarm filter active.
+- Source visual truth: `implementation-final.png` (desktop shell) and `implementation-mobile-final.png` (500 × 844 mobile shell), grounded in the user-provided Axure interface.
+- Implementation screenshots: `collection-stations-final.png` and `collection-stations-mobile-final.png`.
+- Focused state screenshot: `collection-stations-modal-final.png`.
+- Combined comparison evidence: `collection-stations-comparison.png` and `collection-stations-mobile-comparison.png`.
+- Route: `/collection-stations`.
+- Desktop viewport: 2048 × 1098. Mobile viewport: 500 × 844.
+- State: 采集站管理 selected, default filters, first page; focused state is the 新增采集站 dialog.
 
 **Full-view Comparison Evidence**
 
-- The final Edge-rendered capture was compared with the existing home shell to verify shared topbar height, sidebar width, workspace gutter, white content card, primary blue, and selected-navigation treatment.
-- The monitoring content retains the source dashboard's three-column composition: device tree, four-camera wall, and alarm workspace.
-- `智慧视频监控` is selected in the shared sidebar and repeated in the blue breadcrumb chip, matching the navigation behavior of `主页`.
+- The desktop source and implementation were placed together in `collection-stations-comparison.png`. Topbar height, brand position, sidebar width, workspace gutter, selected-navigation fill, tab styling, content bounds, and assistant placement remain aligned.
+- The mobile source and implementation were placed together in `collection-stations-mobile-comparison.png`. The 62 px topbar, mobile menu, compact brand, notification/profile actions, page gutter, tab row, and fixed assistant remain aligned at the same viewport.
+- The new screen extends the source system rather than changing it: shared white surfaces, `#f5f8fd` workspace, `#0869ee` primary states, blue-gray text, restrained borders, and the existing Chinese system-font stack are preserved.
 
 **Focused Region Comparison Evidence**
 
-- Shared shell: brand, app launcher, notification, administrator account, sidebar collapse control, selected menu fill, and breadcrumb spacing align with the home page.
-- Device panel: white surface, pale-blue header, blue controls, dark text, nested checked devices, status colors, search, and scrolling were checked at full resolution.
-- Video wall: dark camera content remains appropriate for footage while its containing card, toolbar, inputs, pagination, and layout controls use the light product theme.
-- Alarm workspace: white cards, pale-blue section headers, primary-blue selection borders, pastel severity/pending badges, local thumbnails, and truncation states were checked at full resolution.
+- `collection-stations-modal-final.png` verifies the complete creation state at 1440 × 900: dimmed backdrop, 720 px white dialog, title/description hierarchy, two-column form, required markers, input sizing, primary/secondary actions, and close control.
+- The 2048 px full-view capture is sufficient to read table typography, status pills, device counts, row rhythm, action controls, and pagination without additional crops.
 
 **Findings**
 
 - No actionable P0, P1, or P2 issues remain.
-- [P3] Camera footage intentionally remains dark/high-contrast inside the light application shell; this preserves video legibility while the surrounding product chrome matches the home page.
-- [P3] Dense alarm titles truncate earlier than on the original full-screen monitoring reference because the shared sidebar reduces available content width. Full titles remain available in the component data.
+- [P3] On the 500 px mobile viewport, the dense management table intentionally scrolls horizontally so values remain readable instead of collapsing into cards; the first three identifying columns are visible by default.
+- [P3] The floating assistant overlaps only the lower-right page margin and does not cover primary table actions or pagination at the tested viewports.
 
 **Required Fidelity Surfaces**
 
-- Fonts and typography: the monitoring view now uses the same Chinese system-font stack, dark foreground hierarchy, weights, and control sizing as the home page.
-- Spacing and layout rhythm: topbar, sidebar, workspace padding, breadcrumb, content-card bounds, 10 px monitoring gaps, and panel radii/borders align with the shared shell.
-- Colors and visual tokens: white surfaces, `#f5f8fd` workspace, pale-blue section backgrounds, `#0869ee` primary states, and muted blue-gray text match the home design language.
-- Image quality and asset fidelity: camera and alarm imagery remain real local raster assets; UI symbols continue to use the Tabler library.
-- Copy and content: shared product copy, `智慧视频监控`, device IDs, alarm metrics, locations, timestamps, and action labels remain intact.
+- Fonts and typography: matches the source `Inter`, `PingFang SC`, and `Microsoft YaHei` stack; navigation, tabs, headings, metrics, table labels, and form text preserve the established size/weight hierarchy and readable wrapping.
+- Spacing and layout rhythm: topbar, sidebar, 22 px desktop workspace gutter, tab spacing, card bounds, 12–14 px component gaps, 68 px table rows, radii, borders, and elevation align with the existing shell.
+- Colors and visual tokens: the implementation uses the source white surfaces, pale workspace, primary blue, muted blue-gray copy, and semantic green/amber/gray status treatments with sufficient contrast.
+- Image quality and asset fidelity: no raster imagery is required for this operational management screen; all interface symbols use the existing Tabler icon library, with no emoji, custom SVG, placeholder, or CSS-drawn substitutes.
+- Copy and content: `采集站管理`, navigation/tab labels, search/filter copy, station names/codes, areas, IPs, protocols, status labels, timestamps, owner names, form labels, validation text, and action labels are complete and realistic.
 
 **Interaction And Runtime Checks**
 
-- Browser interaction QA passed for: shared shell render, active monitoring menu, monitoring breadcrumb, light-theme token, three-column layout, carousel start/pause, video-layout switch, and notification popover.
-- Evidence: `unified-qa-result.html` reports `data-qa="passed"` with all eight checks `true`.
-- Sidebar resize QA passed for: accessible separator semantics, 220-480 px limits, keyboard resizing, synchronized sidebar/content offsets, local persistence, and width restoration on `/video-monitoring`.
-- Evidence: `sidebar-resize-qa-result.html` reports `data-qa="passed"` with all eight resize checks `true`; `sidebar-resize-final.png` confirms the adjusted desktop layout remains visually aligned.
-- Browser console check found no application errors.
-- Final Vite production build passed.
+- `stations-qa-result.html` reports `data-qa="passed"` for page title, active navigation, default table rows, pagination, status filtering, edit dialog, station creation, and zero captured console errors.
+- Search, status and area filters, reset, pagination, new/edit form validation and submission, enable/disable state, deletion confirmation, and responsive navigation are implemented.
+- Production build passed after the module was added.
+- The Vite server remains running locally on port 4173.
 
 **Comparison History**
 
-1. Previous implementation (`video-monitoring-final.png`): monitoring was a standalone full-screen dark dashboard, creating a P1 visual-system mismatch with the light home page.
-2. Fixes: embedded the monitoring page inside the shared topbar/sidebar/workspace shell, added active sidebar and breadcrumb states, and remapped monitoring panels, toolbars, summaries, filters, and alarm cards to the home page's light tokens.
-3. Post-fix evidence (`video-monitoring-unified.png`): the shared shell and light monitoring chrome are visually continuous, while camera footage remains isolated in dark media frames.
+1. Initial implementation at 1440 × 900 revealed the final action control could sit beyond the default table viewport, a P2 usability issue for desktop management work.
+2. Fix: reduced the table minimum width from 1120 px to 1035 px and tightened column tracks while retaining readable content.
+3. Post-fix evidence: `collection-stations-final.png` shows edit, stop/enable, and delete controls together at 2048 × 1098; the smaller 1440 px capture also keeps the complete action group reachable.
 
 **Implementation Checklist**
 
-- [x] Reuse the home topbar and sidebar on `/video-monitoring`.
-- [x] Highlight `智慧视频监控` as the active sidebar item.
-- [x] Use the shared breadcrumb/content-card structure.
-- [x] Convert monitoring panels and controls to the home light theme.
-- [x] Preserve device, camera, pagination, layout, and alarm interactions.
-- [x] Allow desktop users to drag the sidebar between 220 px and 480 px, with keyboard support and remembered width.
-- [x] Pass browser-rendered visual, interaction, console, and production-build checks.
+- [x] Add 采集站管理 to the shared navigation and active tab model.
+- [x] Reuse the existing responsive topbar/sidebar/workspace shell.
+- [x] Add operational metrics, search, status/area filters, reset, table, status pills, pagination, and realistic mock data.
+- [x] Implement add, edit, enable/disable, and delete flows.
+- [x] Verify desktop, 500 × 844 mobile, and dialog states in Edge.
+- [x] Pass interaction, console, and production-build checks.
 
 **Follow-up Polish**
 
-- If the content needs to support narrower laptop screens, a later pass can add a collapsible device panel or alarm drawer instead of compressing all three columns.
+- A future API integration can replace the local mock state without changing the page anatomy or interaction model.
 
 final result: passed
