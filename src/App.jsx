@@ -8,6 +8,7 @@ import {
   IconHome,
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
+  IconDeviceAnalytics,
   IconMenu2,
   IconSparkles,
   IconUser,
@@ -16,11 +17,32 @@ import {
 import wavingHand from "./assets/waving-hand.svg";
 import { VideoMonitoring } from "./VideoMonitoring.jsx";
 import { CollectionStationManagement } from "./CollectionStationManagement.jsx";
+import { AudioVideoAnalysis } from "./AudioVideoAnalysis.jsx";
+
+const deploymentBase = import.meta.env.BASE_URL === "/"
+  ? ""
+  : import.meta.env.BASE_URL.replace(/\/$/, "");
+
+function appHref(path = "/") {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return deploymentBase ? `${deploymentBase}/#${normalizedPath}` : normalizedPath;
+}
+
+function currentRoutePath() {
+  const hashPath = window.location.hash.replace(/^#/, "");
+  if (hashPath.startsWith("/")) return hashPath;
+
+  if (deploymentBase && window.location.pathname.startsWith(deploymentBase)) {
+    return window.location.pathname.slice(deploymentBase.length) || "/";
+  }
+
+  return window.location.pathname;
+}
 
 function Brand({ compact = false }) {
   return (
     <div className="brand" aria-label="智能运维OS">
-      <a className="app-switcher" href="/video-monitoring" aria-label="打开智慧视频监控" title="智慧视频监控">
+      <a className="app-switcher" href={appHref("/video-monitoring")} aria-label="打开智慧视频监控" title="智慧视频监控">
         <IconGridDots size={30} stroke={2.5} />
       </a>
       <span className="brand-mark" aria-hidden="true">
@@ -42,17 +64,21 @@ function Sidebar({ collapsed, mobileOpen, onClose, activePage }) {
       </div>
 
       <nav className="nav-list" aria-label="主导航">
-        <a className={`nav-item ${activePage === "home" ? "active" : ""}`} href="/" onClick={onClose} title={collapsed ? "主页" : undefined}>
+        <a className={`nav-item ${activePage === "home" ? "active" : ""}`} href={appHref("/")} onClick={onClose} title={collapsed ? "主页" : undefined}>
           <span className="nav-icon"><IconHome size={22} stroke={1.85} /></span>
           {!collapsed && <span className="nav-label">主页</span>}
         </a>
-        <a className={`nav-item ${activePage === "video" ? "active" : ""}`} href="/video-monitoring" onClick={onClose} title={collapsed ? "智慧视频监控" : undefined}>
+        <a className={`nav-item ${activePage === "video" ? "active" : ""}`} href={appHref("/video-monitoring")} onClick={onClose} title={collapsed ? "智慧视频监控" : undefined}>
           <span className="nav-icon"><IconDeviceCctv size={22} stroke={1.85} /></span>
           {!collapsed && <span className="nav-label">智慧视频监控</span>}
         </a>
-        <a className={`nav-item ${activePage === "stations" ? "active" : ""}`} href="/collection-stations" onClick={onClose} title={collapsed ? "采集站管理" : undefined}>
+        <a className={`nav-item ${activePage === "stations" ? "active" : ""}`} href={appHref("/collection-stations")} onClick={onClose} title={collapsed ? "采集站管理" : undefined}>
           <span className="nav-icon"><IconBuildingBroadcastTower size={22} stroke={1.85} /></span>
           {!collapsed && <span className="nav-label">采集站管理</span>}
+        </a>
+        <a className={`nav-item ${activePage === "analysis" ? "active" : ""}`} href={appHref("/audio-video-analysis")} onClick={onClose} title={collapsed ? "音视频分析" : undefined}>
+          <span className="nav-icon"><IconDeviceAnalytics size={22} stroke={1.85} /></span>
+          {!collapsed && <span className="nav-label">音视频分析</span>}
         </a>
       </nav>
     </aside>
@@ -72,8 +98,9 @@ function AppShell({ page = "home" }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [homeTabOpen, setHomeTabOpen] = useState(true);
-  const moduleLabel = page === "video" ? "智慧视频监控" : page === "stations" ? "采集站管理" : "";
-  const moduleHref = page === "video" ? "/video-monitoring" : "/collection-stations";
+  const moduleLabel = page === "video" ? "智慧视频监控" : page === "stations" ? "采集站管理" : page === "analysis" ? "音视频分析" : "";
+  const modulePath = page === "video" ? "/video-monitoring" : page === "stations" ? "/collection-stations" : "/audio-video-analysis";
+  const moduleHref = appHref(modulePath);
 
   useEffect(() => {
     const closePopovers = (event) => {
@@ -201,19 +228,19 @@ function AppShell({ page = "home" }) {
       />
       {mobileOpen && <button className="sidebar-scrim" aria-label="关闭导航" onClick={() => setMobileOpen(false)} />}
 
-      <main className={`workspace ${page === "video" ? "video-workspace" : ""} ${page === "stations" ? "stations-workspace" : ""}`}>
+      <main className={`workspace ${page === "video" ? "video-workspace" : ""} ${page === "stations" ? "stations-workspace" : ""} ${page === "analysis" ? "analysis-workspace" : ""}`}>
         <div className="breadcrumb-row">
           {page !== "home" ? (
             <div className="page-tabs" role="tablist" aria-label="已打开页面">
               {homeTabOpen && (
                 <span className="page-tab">
-                  <a href="/" role="tab" aria-selected="false">主页</a>
+                  <a href={appHref("/")} role="tab" aria-selected="false">主页</a>
                   <button onClick={() => setHomeTabOpen(false)} aria-label="关闭主页标签"><IconX size={14} /></button>
                 </span>
               )}
               <span className="page-tab active">
                 <a href={moduleHref} role="tab" aria-selected="true">{moduleLabel}</a>
-                <button onClick={() => { window.location.href = "/"; }} aria-label={`关闭${moduleLabel}标签`}><IconX size={14} /></button>
+                <button onClick={() => { window.location.href = appHref("/"); }} aria-label={`关闭${moduleLabel}标签`}><IconX size={14} /></button>
               </span>
             </div>
           ) : <span className="breadcrumb-chip">主页</span>}
@@ -226,6 +253,10 @@ function AppShell({ page = "home" }) {
         ) : page === "stations" ? (
           <section className="content-card station-content-card" aria-label="采集站管理">
             <CollectionStationManagement />
+          </section>
+        ) : page === "analysis" ? (
+          <section className="content-card analysis-content-card" aria-label="音视频分析">
+            <AudioVideoAnalysis />
           </section>
         ) : (
           <section className="content-card" aria-labelledby="welcome-heading">
@@ -270,9 +301,12 @@ function AppShell({ page = "home" }) {
 }
 
 export function App() {
-  const page = window.location.pathname.startsWith("/video-monitoring")
+  const routePath = currentRoutePath();
+  const page = routePath.startsWith("/audio-video-analysis")
+    ? "analysis"
+    : routePath.startsWith("/video-monitoring")
     ? "video"
-    : window.location.pathname.startsWith("/collection-stations")
+    : routePath.startsWith("/collection-stations")
       ? "stations"
       : "home";
   return <AppShell page={page} />;

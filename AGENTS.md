@@ -9,3 +9,4 @@ When implementing from a selected generated mock, treat that image as the source
 ## Durable Prototype Decisions
 
 - The main navigation includes a module named “采集站管理”, implemented in the existing 智能运维OS light enterprise visual system.
+- The main navigation includes a module named “音视频分析”, based on the 通用分析 design with a measurement-point tree, filter controls, synchronized trend charts, and audio/video joint analysis.

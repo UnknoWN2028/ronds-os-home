@@ -1,62 +1,80 @@
-**Comparison Target**
+# 音视频分析模块 Design QA
 
-- Source visual truth: `implementation-final.png` (desktop shell) and `implementation-mobile-final.png` (500 × 844 mobile shell), grounded in the user-provided Axure interface.
-- Implementation screenshots: `collection-stations-final.png` and `collection-stations-mobile-final.png`.
-- Focused state screenshot: `collection-stations-modal-final.png`.
-- Combined comparison evidence: `collection-stations-comparison.png` and `collection-stations-mobile-comparison.png`.
-- Route: `/collection-stations`.
-- Desktop viewport: 2048 × 1098. Mobile viewport: 500 × 844.
-- State: 采集站管理 selected, default filters, first page; focused state is the 新增采集站 dialog.
+## Comparison Target
 
-**Full-view Comparison Evidence**
+- Source visual truth: `C:\Users\900009733\新建文件夹\analysis-source-desktop.png`
+- Source mobile evidence: `C:\Users\900009733\新建文件夹\analysis-source-mobile.png`
+- Implementation screenshot: `C:\Users\900009733\新建文件夹\audio-video-analysis-desktop-final.png`
+- Implementation mobile screenshot: `C:\Users\900009733\新建文件夹\audio-video-analysis-mobile-final.png`
+- Full-view comparison evidence: `C:\Users\900009733\新建文件夹\analysis-design-qa-comparison-final.png`
+- Focused comparison evidence: `C:\Users\900009733\新建文件夹\analysis-design-qa-focused-final.png`
+- Desktop viewport: 1440 × 1000
+- Mobile viewport: 390 × 844
+- State: 音视频分析 / 联合分析 / 1#皮带机头 / four indicators selected
 
-- The desktop source and implementation were placed together in `collection-stations-comparison.png`. Topbar height, brand position, sidebar width, workspace gutter, selected-navigation fill, tab styling, content bounds, and assistant placement remain aligned.
-- The mobile source and implementation were placed together in `collection-stations-mobile-comparison.png`. The 62 px topbar, mobile menu, compact brand, notification/profile actions, page gutter, tab row, and fixed assistant remain aligned at the same viewport.
-- The new screen extends the source system rather than changing it: shared white surfaces, `#f5f8fd` workspace, `#0869ee` primary states, blue-gray text, restrained borders, and the existing Chinese system-font stack are preserved.
+## Findings
 
-**Focused Region Comparison Evidence**
+- No actionable P0, P1, or P2 visual mismatches remain.
+- The implementation intentionally retains the existing 智能运维OS shell rather than the Axure review chrome visible in the source capture.
+- The source structure is preserved: a measurement-point tree, compact analysis toolbar, date and metric filters, selected-resource context, synchronized trend charts, blue alert guide, and dense enterprise information hierarchy.
+- The audio/video domain extension intentionally adds the live video frame, live spectrum, joint-analysis modes, and compact result summary. These additions support the requested module without changing the source layout rhythm.
 
-- `collection-stations-modal-final.png` verifies the complete creation state at 1440 × 900: dimmed backdrop, 720 px white dialog, title/description hierarchy, two-column form, required markers, input sizing, primary/secondary actions, and close control.
-- The 2048 px full-view capture is sufficient to read table typography, status pills, device counts, row rhythm, action controls, and pagination without additional crops.
+## Required Fidelity Surfaces
 
-**Findings**
+- Fonts and typography: passed. The implementation uses the established Inter / PingFang SC / Microsoft YaHei stack, with compact 9–14 px analysis labels, clear 16 px metric values, and consistent medium-weight hierarchy. Labels do not wrap or clip at the tested desktop viewport.
+- Spacing and layout rhythm: passed. The 258 px resource pane, compact 34–49 px control rows, thin dividers, card gaps, and stacked trend density closely match the source's diagnostic workspace. Mobile reflows controls without hiding the primary action.
+- Colors and visual tokens: passed. The implementation maps the source blue controls, pale gray work surface, white panels, green online states, orange warnings, and red anomaly points into the existing 智能运维OS token system.
+- Image quality and asset fidelity: passed. The live video view uses the project's real local conveyor image with an appropriate crop; icons come from the existing Tabler icon library. No hotlinked or placeholder assets are used.
+- Copy and content: passed. Labels are specific to the requested audio/video workflow: 音视频分析、联合分析、视频分析、音频分析、声压级、异响概率、画面清晰度、皮带跑偏、测点资源 and 开始分析.
 
-- No actionable P0, P1, or P2 issues remain.
-- [P3] On the 500 px mobile viewport, the dense management table intentionally scrolls horizontally so values remain readable instead of collapsing into cards; the first three identifying columns are visible by default.
-- [P3] The floating assistant overlaps only the lower-right page margin and does not cover primary table actions or pagination at the tested viewports.
+## Responsive Evidence
 
-**Required Fidelity Surfaces**
+- At 390 × 844, the global navigation becomes a drawer, the measurement-point tree opens from “选择测点”, filters stack, analysis modes remain available, and the main content scrolls vertically.
+- No persistent controls overflow the viewport. The live video and spectrum cards preserve readable titles and values.
 
-- Fonts and typography: matches the source `Inter`, `PingFang SC`, and `Microsoft YaHei` stack; navigation, tabs, headings, metrics, table labels, and form text preserve the established size/weight hierarchy and readable wrapping.
-- Spacing and layout rhythm: topbar, sidebar, 22 px desktop workspace gutter, tab spacing, card bounds, 12–14 px component gaps, 68 px table rows, radii, borders, and elevation align with the existing shell.
-- Colors and visual tokens: the implementation uses the source white surfaces, pale workspace, primary blue, muted blue-gray copy, and semantic green/amber/gray status treatments with sufficient contrast.
-- Image quality and asset fidelity: no raster imagery is required for this operational management screen; all interface symbols use the existing Tabler icon library, with no emoji, custom SVG, placeholder, or CSS-drawn substitutes.
-- Copy and content: `采集站管理`, navigation/tab labels, search/filter copy, station names/codes, areas, IPs, protocols, status labels, timestamps, owner names, form labels, validation text, and action labels are complete and realistic.
+## Primary Interactions Tested
 
-**Interaction And Runtime Checks**
+- Main navigation opens `/audio-video-analysis` and marks 音视频分析 active.
+- 视频分析 reduces visible trends from four to two video indicators.
+- 音频分析 reduces visible trends to the two audio indicators.
+- Deselecting 声压级 reduces the audio trend count from two to one.
+- Selecting 1#皮带中段 updates the active resource context.
+- Play/pause toggles its accessible label between 播放预览 and 暂停预览.
+- 开始分析 refreshes data and shows the关联异常 confirmation toast.
+- The mobile measurement-point drawer opens and closes successfully.
+- Browser network and runtime checks after the final fix reported zero bad responses and zero runtime errors.
 
-- `stations-qa-result.html` reports `data-qa="passed"` for page title, active navigation, default table rows, pagination, status filtering, edit dialog, station creation, and zero captured console errors.
-- Search, status and area filters, reset, pagination, new/edit form validation and submission, enable/disable state, deletion confirmation, and responsive navigation are implemented.
-- Production build passed after the module was added.
-- The Vite server remains running locally on port 4173.
+## Comparison History
 
-**Comparison History**
+### Pass 1
 
-1. Initial implementation at 1440 × 900 revealed the final action control could sit beyond the default table viewport, a P2 usability issue for desktop management work.
-2. Fix: reduced the table minimum width from 1120 px to 1035 px and tightened column tracks while retaining readable content.
-3. Post-fix evidence: `collection-stations-final.png` shows edit, stop/enable, and delete controls together at 2048 × 1098; the smaller 1440 px capture also keeps the complete action group reachable.
+- Visual comparison: no actionable P0/P1/P2 differences in the required fidelity surfaces.
+- Browser check found one P2 technical-polish issue: `/favicon.ico` returned 404 in the console.
+- Fix: added an explicit local SVG favicon reference in `index.html`.
 
-**Implementation Checklist**
+### Pass 2
 
-- [x] Add 采集站管理 to the shared navigation and active tab model.
-- [x] Reuse the existing responsive topbar/sidebar/workspace shell.
-- [x] Add operational metrics, search, status/area filters, reset, table, status pills, pagination, and realistic mock data.
-- [x] Implement add, edit, enable/disable, and delete flows.
-- [x] Verify desktop, 500 × 844 mobile, and dialog states in Edge.
-- [x] Pass interaction, console, and production-build checks.
+- Post-fix visual evidence: `audio-video-analysis-desktop-final.png` and `audio-video-analysis-mobile-final.png`.
+- Post-fix network evidence: no 4xx/5xx responses.
+- Post-fix runtime evidence: no JavaScript exceptions.
+- Full-view and focused comparisons show the diagnostic layout remains stable after the fix.
 
-**Follow-up Polish**
+## Open Questions
 
-- A future API integration can replace the local mock state without changing the page anatomy or interaction model.
+- None blocking. Production data and model outputs are represented with realistic mock values for the prototype.
+
+## Implementation Checklist
+
+- [x] Add 音视频分析 to main navigation and page tabs.
+- [x] Recreate the source diagnostic layout in the existing design system.
+- [x] Add working audio, video, and joint-analysis modes.
+- [x] Add responsive measurement-point navigation.
+- [x] Add realistic local imagery, spectrum, summaries, and trend charts.
+- [x] Verify desktop, mobile, interactions, build, network, and runtime console.
+
+## Follow-up Polish
+
+- P3: Replace mock trend data with backend analysis results when an API contract is available.
+- P3: Connect the preview to a real HLS/WebRTC stream when the media endpoint is available.
 
 final result: passed

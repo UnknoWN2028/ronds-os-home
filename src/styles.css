@@ -371,6 +371,10 @@ button { font: inherit; }
   background: #f7f9fd;
 }
 
+.analysis-content-card {
+  background: #fff;
+}
+
 .welcome {
   position: absolute;
   top: 40px;
