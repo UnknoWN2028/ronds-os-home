@@ -301,7 +301,19 @@ function AppShell({ page = "home" }) {
 }
 
 export function App() {
-  const routePath = currentRoutePath();
+  const [routePath, setRoutePath] = useState(currentRoutePath);
+
+  useEffect(() => {
+    const syncRoute = () => setRoutePath(currentRoutePath());
+    window.addEventListener("hashchange", syncRoute);
+    window.addEventListener("popstate", syncRoute);
+
+    return () => {
+      window.removeEventListener("hashchange", syncRoute);
+      window.removeEventListener("popstate", syncRoute);
+    };
+  }, []);
+
   const page = routePath.startsWith("/audio-video-analysis")
     ? "analysis"
     : routePath.startsWith("/video-monitoring")
