@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   IconAperture,
   IconAlertTriangle,
@@ -10,6 +10,7 @@ import {
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
+  IconCircleCheck,
   IconCirclePercentage,
   IconClock,
   IconColumns3,
@@ -88,14 +89,14 @@ const DEVICE_TREE = [
             label: "【FC020001】1号廊道",
             type: "folder",
             children: [
-              { id: "bluetooth-b", label: "嵌入式测试蓝牙-2", type: "camera", status: "online", image: warehouseCamera1 },
+              { id: "bluetooth-b", label: "嵌入式测试蓝牙-2", type: "camera", status: "online", image: conveyorBelt },
               { id: "08300002", label: "08300002", type: "camera", status: "offline", image: conveyorBelt },
               { id: "08309999", label: "08309999", type: "camera", status: "offline", image: warehouseCamera2 },
               { id: "a-building", label: "A栋楼顶11111", type: "camera", status: "offline", image: warehouseCamera1 },
             ],
           },
-          { id: "08300097", label: "08300097", type: "camera", status: "online", image: warehouseCamera1 },
-          { id: "08300098", label: "08300098", type: "camera", status: "online", image: warehouseCamera2 },
+          { id: "08300097", label: "08300097", type: "camera", status: "online", image: warehouseCamera2 },
+          { id: "08300098", label: "08300098", type: "camera", status: "online", image: conveyorBelt },
           { id: "08307701", label: "08307701", type: "camera", status: "offline", image: conveyorBelt },
           { id: "embedded", label: "12嵌入式1111", type: "camera", status: "online", image: warehouseCamera2 },
         ],
@@ -134,6 +135,7 @@ const ALL_NODES = flattenNodes(DEVICE_TREE);
 const CAMERA_NODES = ALL_NODES.filter((node) => node.type === "camera");
 const CAMERA_MAP = new Map(CAMERA_NODES.map((node) => [node.id, node]));
 const BRANCH_IDS = ALL_NODES.filter((node) => node.children).map((node) => node.id);
+const DEFAULT_SELECTED_IDS = ["bluetooth-a", "bluetooth-b", "08300097", "08300098"];
 
 function cameraIdsFor(node) {
   if (!node.children) return node.type === "camera" ? [node.id] : [];
@@ -162,7 +164,7 @@ function DeviceIcon({ item }) {
   return <IconCamera size={18} />;
 }
 
-function DevicePanel({ selected, onToggle }) {
+function DevicePanel({ selected, onToggle, activeCameraId, onActivate }) {
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState(() => new Set(BRANCH_IDS));
   const normalizedQuery = query.trim().toLowerCase();
@@ -171,7 +173,6 @@ function DevicePanel({ selected, onToggle }) {
     total: CAMERA_NODES.length,
     online: CAMERA_NODES.filter((item) => item.status === "online").length,
     offline: CAMERA_NODES.filter((item) => item.status === "offline").length,
-    thirdParty: CAMERA_NODES.filter((item) => item.status === "third-party").length,
   }), []);
 
   const toggleExpanded = (id) => {
@@ -197,7 +198,7 @@ function DevicePanel({ selected, onToggle }) {
       return (
         <div className="device-tree-group" key={node.id}>
           <div
-            className="device-row"
+            className={`device-row ${node.id === activeCameraId ? "is-active" : ""}`}
             style={{ "--tree-level": level }}
             role="treeitem"
             aria-expanded={isBranch ? isExpanded : undefined}
@@ -218,7 +219,7 @@ function DevicePanel({ selected, onToggle }) {
             <span className={`device-type status-${node.status ?? "group"}`} title={node.status ? statusCopy : undefined}>
               <DeviceIcon item={node} />
             </span>
-            <button className="device-label" onClick={() => isBranch ? toggleExpanded(node.id) : onToggle(childIds)} title={node.label}>
+            <button className="device-label" onClick={() => isBranch ? toggleExpanded(node.id) : onActivate(node.id)} title={node.label}>
               {node.label}
             </button>
           </div>
@@ -233,15 +234,22 @@ function DevicePanel({ selected, onToggle }) {
     <section className="monitor-panel device-panel">
       <PanelTitle>监控设备</PanelTitle>
       <div className="device-stats">
-        <span>总数：<b>{stats.total}</b></span>
-        <span>在线：<b className="online">{stats.online}</b></span>
-        <span>离线：<b className="offline">{stats.offline}</b></span>
-        <span>第三方：<b>{stats.thirdParty}</b></span>
+        <span><small>设备</small><b>{stats.total}</b></span>
+        <span><small>在线</small><b className="online">{stats.online}</b></span>
+        <span><small>离线</small><b className="offline">{stats.offline}</b></span>
+        <span><small>已选</small><b className="selected">{selected.length}</b></span>
       </div>
-      <label className="device-search">
+      <div className="device-search">
         <IconSearch size={19} />
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="关键字搜索" />
-      </label>
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => { if (event.key === "Escape") setQuery(""); }}
+          placeholder="搜索设备名称或编号"
+          aria-label="搜索监控设备"
+        />
+        {query && <button onClick={() => setQuery("")} aria-label="清空设备搜索" title="清空搜索"><IconX size={15} /></button>}
+      </div>
       <div className="device-tree" role="tree" aria-label="监控设备树">
         {hasMatches ? renderNodes(DEVICE_TREE) : <div className="device-empty">未找到匹配设备</div>}
       </div>
@@ -249,28 +257,86 @@ function DevicePanel({ selected, onToggle }) {
   );
 }
 
-function VideoTile({ camera, active, onSelect }) {
+function VideoTile({ camera, active, onSelect, onFeedback }) {
   const [paused, setPaused] = useState(false);
   const [muted, setMuted] = useState(true);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [reconnecting, setReconnecting] = useState(false);
+  const tileRef = useRef(null);
+  const reconnectTimerRef = useRef(null);
 
-  if (!camera) return <div className="video-tile empty-tile"><span>等待选择设备</span></div>;
+  useEffect(() => {
+    if (!moreOpen) return undefined;
+    const closeMenu = (event) => {
+      if (event.type === "keydown" && event.key !== "Escape") return;
+      if (event.type === "pointerdown" && tileRef.current?.contains(event.target)) return;
+      setMoreOpen(false);
+    };
+    document.addEventListener("pointerdown", closeMenu);
+    document.addEventListener("keydown", closeMenu);
+    return () => {
+      document.removeEventListener("pointerdown", closeMenu);
+      document.removeEventListener("keydown", closeMenu);
+    };
+  }, [moreOpen]);
 
-  const enterFullscreen = (event) => {
+  useEffect(() => () => window.clearTimeout(reconnectTimerRef.current), []);
+
+  if (!camera) return (
+    <div className="video-tile empty-tile">
+      <IconCamera size={28} stroke={1.5} />
+      <strong>暂无监控画面</strong>
+      <span>从左侧设备树勾选摄像头</span>
+    </div>
+  );
+
+  const enterFullscreen = async (event) => {
     event.stopPropagation();
-    event.currentTarget.closest(".video-tile")?.requestFullscreen?.();
+    const tile = event.currentTarget.closest(".video-tile");
+    if (!tile?.requestFullscreen) {
+      onFeedback("当前浏览器不支持画面全屏", "warning");
+      return;
+    }
+    try {
+      await tile.requestFullscreen();
+    } catch {
+      onFeedback("浏览器未允许进入画面全屏", "warning");
+    }
+  };
+
+  const captureFrame = () => {
+    setMoreOpen(false);
+    onFeedback(`${camera.label} 当前画面已加入抓拍记录`);
+  };
+
+  const reconnectStream = () => {
+    setMoreOpen(false);
+    setReconnecting(true);
+    onFeedback(`正在重新连接 ${camera.label}`, "info");
+    window.clearTimeout(reconnectTimerRef.current);
+    reconnectTimerRef.current = window.setTimeout(() => {
+      setReconnecting(false);
+      onFeedback(camera.status === "offline" ? `${camera.label} 仍处于离线状态` : `${camera.label} 视频流已恢复`, camera.status === "offline" ? "warning" : "success");
+    }, 1200);
   };
 
   return (
     <article
-      className={`video-tile has-image ${active ? "selected" : ""} ${paused ? "paused" : ""}`}
+      ref={tileRef}
+      className={`video-tile has-image status-${camera.status} ${active ? "selected" : ""} ${paused ? "paused" : ""} ${reconnecting ? "reconnecting" : ""}`}
       onClick={() => onSelect(camera.id)}
       aria-label={`${camera.label}监控画面`}
     >
-      <span className="camera-id">{camera.label}</span>
+      <span className="camera-id"><i aria-hidden="true" />{camera.label}</span>
       <img src={camera.image} alt={`${camera.label} 监控画面`} />
-      <span className="video-timestamp">2026-07-17 15:35:{String(camera.id.length * 3).padStart(2, "0")}</span>
       {camera.status === "offline" && <span className="stream-state">离线录像</span>}
+      <span className="video-timestamp">2026-07-17 15:35:{String(camera.id.length * 3).padStart(2, "0")}</span>
+      {reconnecting ? (
+        <div className="offline-hint reconnecting-hint"><IconLoader2 className="loading-spinner" size={24} /><span>正在重连</span><small>正在重新建立视频连接</small></div>
+      ) : camera.status === "offline" && (
+        <div className="offline-hint"><IconAlertTriangle size={24} /><span>信号中断</span><small>显示最后录像画面</small></div>
+      )}
+      {active && <span className="active-camera-indicator">当前控制</span>}
       {paused && <div className="paused-cover"><IconPlayerPlay size={42} /><span>已暂停</span></div>}
       <div className="video-controls">
         <button onClick={(event) => { event.stopPropagation(); setPaused((value) => !value); }} aria-label={paused ? "播放" : "暂停"}>
@@ -288,15 +354,15 @@ function VideoTile({ camera, active, onSelect }) {
       </div>
       {moreOpen && (
         <div className="video-more-menu" onClick={(event) => event.stopPropagation()}>
-          <button onClick={() => setMoreOpen(false)}>抓拍当前画面</button>
-          <button onClick={() => { setPaused(false); setMoreOpen(false); }}>重新连接视频</button>
+          <button onClick={captureFrame}>抓拍当前画面</button>
+          <button onClick={reconnectStream} disabled={reconnecting}>重新连接视频</button>
         </div>
       )}
     </article>
   );
 }
 
-function VideoWall({ devices, activeCameraId, onActiveCameraChange }) {
+function VideoWall({ devices, activeCameraId, onActiveCameraChange, onFeedback }) {
   const [playing, setPlaying] = useState(false);
   const [layout, setLayout] = useState("quad");
   const [page, setPage] = useState(1);
@@ -305,28 +371,59 @@ function VideoWall({ devices, activeCameraId, onActiveCameraChange }) {
   const pageSize = layout === "single" ? 1 : layout === "nine" ? 9 : 4;
   const totalPages = Math.max(1, Math.ceil(devices.length / pageSize));
   const visibleDevices = devices.slice((page - 1) * pageSize, page * pageSize);
+  const onlineCount = devices.filter((device) => device.status === "online").length;
 
   useEffect(() => {
     setPage((value) => Math.min(value, totalPages));
   }, [totalPages]);
 
   useEffect(() => {
-    if (!devices.some((device) => device.id === activeCameraId)) onActiveCameraChange(devices[0]?.id ?? null, false);
-  }, [devices, activeCameraId, onActiveCameraChange]);
+    const activeIndex = devices.findIndex((device) => device.id === activeCameraId);
+    if (activeIndex < 0) {
+      onActiveCameraChange(devices[0]?.id ?? null, false);
+      return;
+    }
+    setPage(Math.floor(activeIndex / pageSize) + 1);
+  }, [devices, activeCameraId, onActiveCameraChange, pageSize]);
 
   useEffect(() => {
-    if (!playing || totalPages < 2) return undefined;
-    const timer = window.setInterval(() => setPage((value) => value >= totalPages ? 1 : value + 1), Math.max(1, intervalSeconds) * 1000);
+    if (!playing || devices.length < 2) return undefined;
+    const timer = window.setInterval(() => {
+      if (totalPages > 1) {
+        setPage((value) => {
+          const nextPage = value >= totalPages ? 1 : value + 1;
+          onActiveCameraChange(devices[(nextPage - 1) * pageSize]?.id ?? devices[0]?.id ?? null, false);
+          return nextPage;
+        });
+      } else {
+        const currentIndex = devices.findIndex((device) => device.id === activeCameraId);
+        onActiveCameraChange(devices[(currentIndex + 1 + devices.length) % devices.length]?.id ?? null, false);
+      }
+    }, Math.max(1, intervalSeconds) * 1000);
     return () => window.clearInterval(timer);
-  }, [playing, totalPages, intervalSeconds]);
+  }, [playing, totalPages, intervalSeconds, devices, activeCameraId, onActiveCameraChange, pageSize]);
 
   const changeLayout = (nextLayout) => {
     setLayout(nextLayout);
-    setPage(1);
+    setPlaying(false);
   };
 
-  const maximizeWall = (event) => {
-    event.currentTarget.closest(".video-wall-wrap")?.requestFullscreen?.();
+  const maximizeWall = async (event) => {
+    const wall = event.currentTarget.closest(".video-wall-wrap");
+    if (!wall?.requestFullscreen) {
+      onFeedback("当前浏览器不支持视频墙全屏", "warning");
+      return;
+    }
+    try {
+      await wall.requestFullscreen();
+    } catch {
+      onFeedback("浏览器未允许进入视频墙全屏", "warning");
+    }
+  };
+
+  const goToPage = (nextPage) => {
+    setPlaying(false);
+    setPage(Math.max(1, Math.min(totalPages, nextPage)));
   };
 
   return (
@@ -338,32 +435,34 @@ function VideoWall({ devices, activeCameraId, onActiveCameraChange }) {
             camera={visibleDevices[index]}
             active={visibleDevices[index]?.id === activeCameraId}
             onSelect={(id) => onActiveCameraChange(id, true)}
+            onFeedback={onFeedback}
           />
         ))}
       </div>
       <div className="video-toolbar">
         <button className="toolbar-icon-button" onClick={maximizeWall} aria-label="最大化实时视频" title="最大化实时视频"><IconMaximize size={20} /></button>
-        <button className="quality-button" onClick={() => setQuality((value) => value === "高清" ? "流畅" : "高清")} aria-label="切换视频流畅度">{quality}</button>
+        <button className="quality-button" onClick={() => setQuality((value) => { const next = value === "高清" ? "流畅" : "高清"; onFeedback(`视频墙已切换为${next}模式`, "info"); return next; })} aria-label="切换视频流畅度">{quality}</button>
         <span className="toolbar-divider" />
         <span className="interval-label">轮播间隔:</span>
-        <input type="number" min="1" max="60" value={intervalSeconds} onChange={(event) => setIntervalSeconds(Number(event.target.value) || 1)} aria-label="轮播间隔秒数" />
+        <input type="number" min="1" max="60" value={intervalSeconds} onChange={(event) => setIntervalSeconds(Math.max(1, Math.min(60, Number(event.target.value) || 1)))} aria-label="轮播间隔秒数" />
         <span className="interval-unit">秒</span>
-        <button className="start-button" onClick={() => setPlaying((value) => !value)} disabled={totalPages < 2}>
+        <button className="start-button" onClick={() => setPlaying((value) => !value)} disabled={devices.length < 2}>
           {playing ? <IconPlayerPause size={17} /> : <IconPlayerPlay size={17} />}
           {playing ? "暂停" : "开始"}
         </button>
-        <span className="selected-count">共{devices.length}项</span>
+        <span className="wall-health"><i aria-hidden="true" />{onlineCount} 路在线</span>
+        <span className="selected-count">已选 {devices.length} 路</span>
         <div className="pagination" aria-label="视频分页">
-          <button onClick={() => setPage((value) => Math.max(1, value - 1))} aria-label="上一页" disabled={page === 1}><IconChevronLeft size={18} /></button>
+          <button onClick={() => goToPage(page - 1)} aria-label="上一页" disabled={page === 1}><IconChevronLeft size={18} /></button>
           {Array.from({ length: totalPages }, (_, index) => index + 1).map((item) => (
-            <button key={item} className={page === item ? "current" : ""} onClick={() => setPage(item)} aria-current={page === item ? "page" : undefined}>{item}</button>
+            <button key={item} className={page === item ? "current" : ""} onClick={() => goToPage(item)} aria-current={page === item ? "page" : undefined}>{item}</button>
           ))}
-          <button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} aria-label="下一页" disabled={page === totalPages}><IconChevronRight size={18} /></button>
+          <button onClick={() => goToPage(page + 1)} aria-label="下一页" disabled={page === totalPages}><IconChevronRight size={18} /></button>
         </div>
         <div className="layout-controls" aria-label="分屏切换">
-          <button className={layout === "single" ? "active" : ""} onClick={() => changeLayout("single")} aria-label="单画面"><IconSquare size={21} /></button>
-          <button className={layout === "quad" ? "active" : ""} onClick={() => changeLayout("quad")} aria-label="四画面"><IconLayoutGrid size={21} /></button>
-          <button className={layout === "nine" ? "active" : ""} onClick={() => changeLayout("nine")} aria-label="九画面"><IconColumns3 size={21} /></button>
+          <button className={layout === "single" ? "active" : ""} onClick={() => changeLayout("single")} aria-label="单画面" title="单画面"><IconSquare size={21} /></button>
+          <button className={layout === "quad" ? "active" : ""} onClick={() => changeLayout("quad")} aria-label="四画面" title="四画面"><IconLayoutGrid size={21} /></button>
+          <button className={layout === "nine" ? "active" : ""} onClick={() => changeLayout("nine")} aria-label="九画面" title="九画面"><IconColumns3 size={21} /></button>
         </div>
       </div>
     </section>
@@ -557,7 +656,7 @@ function playbackRecords(camera) {
   }));
 }
 
-function PlaybackPanel({ camera }) {
+function PlaybackPanel({ camera, onFeedback }) {
   const [source, setSource] = useState("upper");
   const [sortKey, setSortKey] = useState("start");
   const [ascending, setAscending] = useState(false);
@@ -628,7 +727,7 @@ function PlaybackPanel({ camera }) {
               {source === "upper" && <td>{record.start}</td>}
               {source === "upper" && showDuration && <td>{Math.floor(record.duration / 60)}分{record.duration % 60}秒</td>}
               {source === "upper" && <td>{record.mode}</td>}
-              <td><button aria-label={`播放${record.name}`}><IconPlayerPlay size={15} /></button></td>
+              <td><button onClick={() => onFeedback(`正在加载 ${record.name}`, "info")} aria-label={`播放${record.name}`}><IconPlayerPlay size={15} /></button></td>
             </tr>)}
           </tbody>
         </table>
@@ -643,13 +742,19 @@ function PlaybackPanel({ camera }) {
   );
 }
 
-function AlarmDialog({ alarm, onClose, onUpdate }) {
+function AlarmDialog({ alarm, onClose, onUpdate, onLocate }) {
   const [attachmentIndex, setAttachmentIndex] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(false);
   useEffect(() => {
     setAttachmentIndex(0);
     setVideoPlaying(false);
   }, [alarm?.id]);
+  useEffect(() => {
+    if (!alarm) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [alarm, onClose]);
   if (!alarm) return null;
   const attachments = alarm.attachments ?? [{ type: "image", src: alarm.image }];
   const attachment = attachments[attachmentIndex];
@@ -684,12 +789,27 @@ function AlarmDialog({ alarm, onClose, onUpdate }) {
           <div><dt>报警设备</dt><dd>YS242LTHJ / LZX皮带机廊道测试 / 1号廊道</dd></div>
         </dl>
         <footer>
-          <button className="secondary" onClick={onClose}>定位到报警列表</button>
+          <button className="secondary" onClick={() => onLocate(alarm.id)}>定位到报警列表</button>
           <button className="secondary" onClick={onClose}>取消</button>
-          <button onClick={() => onUpdate(alarm.id, "defect")}>转为缺陷</button>
-          <button onClick={() => onUpdate(alarm.id, "closed")}>关闭报警</button>
+          <button onClick={() => onUpdate(alarm.id, "defect")} disabled={alarm.status !== "pending"}>{alarm.status === "defect" ? "已转为缺陷" : "转为缺陷"}</button>
+          <button onClick={() => onUpdate(alarm.id, "closed")} disabled={alarm.status === "closed"}>{alarm.status === "closed" ? "报警已关闭" : "关闭报警"}</button>
         </footer>
       </section>
+    </div>
+  );
+}
+
+function MonitorToast({ feedback, onClose }) {
+  useEffect(() => {
+    const timer = window.setTimeout(onClose, 2800);
+    return () => window.clearTimeout(timer);
+  }, [feedback.id, onClose]);
+
+  return (
+    <div className={`monitor-toast tone-${feedback.tone}`} role="status" aria-live="polite">
+      {feedback.tone === "warning" ? <IconAlertTriangle size={19} /> : <IconCircleCheck size={19} />}
+      <span>{feedback.text}</span>
+      <button onClick={onClose} aria-label="关闭提示"><IconX size={16} /></button>
     </div>
   );
 }
@@ -697,33 +817,35 @@ function AlarmDialog({ alarm, onClose, onUpdate }) {
 export function VideoMonitoring({ embedded = false }) {
   const [selected, setSelected] = useState(() => {
     try {
-      const saved = JSON.parse(window.localStorage.getItem("ronds-monitor-devices") ?? "null");
+      const saved = JSON.parse(window.localStorage.getItem("ronds-monitor-devices-v2") ?? "null");
       if (Array.isArray(saved)) return saved.filter((id) => CAMERA_MAP.has(id));
     } catch {
       // Ignore invalid stored data and use the default selection.
     }
-    return CAMERA_NODES.map((item) => item.id);
+    return DEFAULT_SELECTED_IDS;
   });
   const [alarms, setAlarms] = useState(INITIAL_ALARMS);
   const [alarmFilter, setAlarmFilter] = useState("pending");
   const [detailAlarmId, setDetailAlarmId] = useState(null);
-  const [activeCameraId, setActiveCameraId] = useState(CAMERA_NODES[0]?.id ?? null);
+  const [feedback, setFeedback] = useState(null);
+  const feedbackIdRef = useRef(0);
+  const [activeCameraId, setActiveCameraId] = useState(DEFAULT_SELECTED_IDS[0] ?? null);
   const [rightColumnOpen, setRightColumnOpen] = useState(() => {
-    const saved = window.localStorage.getItem("ronds-monitor-right-open");
+    const saved = window.localStorage.getItem("ronds-monitor-right-open-v2");
     if (saved !== null) return saved === "true";
-    return window.innerWidth >= 1600;
+    return window.innerWidth >= 1500;
   });
   const [rightMode, setRightMode] = useState("alarms");
-  const selectedDevices = selected.map((id) => CAMERA_MAP.get(id)).filter(Boolean);
+  const selectedDevices = useMemo(() => selected.map((id) => CAMERA_MAP.get(id)).filter(Boolean), [selected]);
   const activeCamera = CAMERA_MAP.get(activeCameraId) ?? selectedDevices[0] ?? null;
   const detailAlarm = alarms.find((alarm) => alarm.id === detailAlarmId) ?? null;
 
   useEffect(() => {
-    window.localStorage.setItem("ronds-monitor-devices", JSON.stringify(selected));
+    window.localStorage.setItem("ronds-monitor-devices-v2", JSON.stringify(selected));
   }, [selected]);
 
   useEffect(() => {
-    window.localStorage.setItem("ronds-monitor-right-open", String(rightColumnOpen));
+    window.localStorage.setItem("ronds-monitor-right-open-v2", String(rightColumnOpen));
   }, [rightColumnOpen]);
 
   const toggleDevices = (ids) => {
@@ -735,9 +857,18 @@ export function VideoMonitoring({ embedded = false }) {
     });
   };
 
+  const showFeedback = useCallback((text, tone = "success") => {
+    feedbackIdRef.current += 1;
+    setFeedback({ id: feedbackIdRef.current, text, tone });
+  }, []);
+
+  const closeFeedback = useCallback(() => setFeedback(null), []);
+
   const updateAlarm = (id, status) => {
+    const alarm = alarms.find((item) => item.id === id);
     setAlarms((items) => items.map((item) => item.id === id ? { ...item, status } : item));
     setDetailAlarmId(null);
+    showFeedback(`${alarm?.title ?? "报警"}已${status === "defect" ? "转为缺陷" : "关闭"}`);
   };
 
   const openRightColumn = () => {
@@ -752,12 +883,23 @@ export function VideoMonitoring({ embedded = false }) {
     }
   };
 
-  const selectCamera = (id, openControls = true) => {
+  const selectCamera = useCallback((id, openControls = true) => {
+    if (id) {
+      setSelected((items) => items.includes(id) ? items : [...items, id]);
+    }
     setActiveCameraId(id);
     if (openControls && id) {
       setRightMode("camera");
-      openRightColumn();
+      setRightColumnOpen(true);
     }
+  }, []);
+
+  const locateAlarm = (id) => {
+    setDetailAlarmId(null);
+    setAlarmFilter("all");
+    setRightMode("alarms");
+    setRightColumnOpen(true);
+    showFeedback(`已在报警列表中定位事件 #${id}`, "info");
   };
 
   return (
@@ -770,8 +912,8 @@ export function VideoMonitoring({ embedded = false }) {
         </header>
       )}
       <div className={`monitor-layout ${rightColumnOpen ? "" : "right-collapsed"}`}>
-        <DevicePanel selected={selected} onToggle={toggleDevices} />
-        <VideoWall devices={selectedDevices} activeCameraId={activeCameraId} onActiveCameraChange={selectCamera} />
+        <DevicePanel selected={selected} onToggle={toggleDevices} activeCameraId={activeCameraId} onActivate={selectCamera} />
+        <VideoWall devices={selectedDevices} activeCameraId={activeCameraId} onActiveCameraChange={selectCamera} onFeedback={showFeedback} />
         <button
           className="right-column-toggle"
           onClick={toggleRightColumn}
@@ -779,6 +921,7 @@ export function VideoMonitoring({ embedded = false }) {
           title={rightColumnOpen ? "收起右侧栏" : "展开右侧栏"}
         >
           {rightColumnOpen ? <IconChevronRight size={19} /> : <IconChevronLeft size={19} />}
+          {!rightColumnOpen && alarms.some((alarm) => alarm.status === "pending") && <span className="toggle-alarm-badge">{alarms.filter((alarm) => alarm.status === "pending").length}</span>}
         </button>
         {rightColumnOpen && (
           <aside className={`monitor-right mode-${rightMode}`}>
@@ -794,13 +937,14 @@ export function VideoMonitoring({ embedded = false }) {
             ) : (
               <>
                 <PtzPanel camera={activeCamera} />
-                <PlaybackPanel camera={activeCamera} />
+                <PlaybackPanel camera={activeCamera} onFeedback={showFeedback} />
               </>
             )}
           </aside>
         )}
       </div>
-      <AlarmDialog alarm={detailAlarm} onClose={() => setDetailAlarmId(null)} onUpdate={updateAlarm} />
+      <AlarmDialog alarm={detailAlarm} onClose={() => setDetailAlarmId(null)} onUpdate={updateAlarm} onLocate={locateAlarm} />
+      {feedback && <MonitorToast key={feedback.id} feedback={feedback} onClose={closeFeedback} />}
     </div>
   );
 }

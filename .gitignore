@@ -10,6 +10,8 @@ dist/
 *-qa-result.html
 *-qa-console.log
 *-qa.html
+*-qa.mjs
+*-spec-state.html
 source-page.html
 source-*-dom.html
 analysis-*-dom.html
@@ -17,6 +19,8 @@ analysis-*-dom.html
 
 # Local comparison and implementation screenshots
 *.png
+!src/assets/rh830-visible-light.png
+src/assets/*-source-visual.svg
 
 # Editor and operating-system files
 .vscode/

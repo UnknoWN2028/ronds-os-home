@@ -16,7 +16,7 @@ import {
 } from "@tabler/icons-react/dist/cjs/tabler-icons-react.cjs";
 import wavingHand from "./assets/waving-hand.svg";
 import { VideoMonitoring } from "./VideoMonitoring.jsx";
-import { CollectionStationManagement } from "./CollectionStationManagement.jsx";
+import { RH830StationManagement as CollectionStationManagement } from "./RH830StationManagement.jsx";
 import { AudioVideoAnalysis } from "./AudioVideoAnalysis.jsx";
 
 const deploymentBase = import.meta.env.BASE_URL === "/"
@@ -234,8 +234,8 @@ function AppShell({ page = "home" }) {
             <div className="page-tabs" role="tablist" aria-label="已打开页面">
               {homeTabOpen && (
                 <span className="page-tab">
-                  <a href={appHref("/")} role="tab" aria-selected="false">主页</a>
-                  <button onClick={() => setHomeTabOpen(false)} aria-label="关闭主页标签"><IconX size={14} /></button>
+                  <a href={appHref("/")} role="tab" aria-selected="false">{page === "stations" ? "机器人管理" : "主页"}</a>
+                  <button onClick={() => setHomeTabOpen(false)} aria-label={`关闭${page === "stations" ? "机器人管理" : "主页"}标签`}><IconX size={14} /></button>
                 </span>
               )}
               <span className="page-tab active">
