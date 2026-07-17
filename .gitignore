@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.npm-cache/
+.npmrc
+
+# Vite and local runtime logs
+*.log
+
+# Browser-based QA output
+*-qa-result.html
+*-qa-console.log
+*-qa.html
+source-page.html
+.edge-*/
+
+# Local comparison and implementation screenshots
+*.png
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
