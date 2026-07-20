@@ -16,6 +16,9 @@ source-page.html
 source-*-dom.html
 analysis-*-dom.html
 .edge-*/
+playwright-report/
+test-results/
+coverage/
 
 # Local comparison and implementation screenshots
 *.png
@@ -27,3 +30,4 @@ src/assets/*-source-visual.svg
 .idea/
 .DS_Store
 Thumbs.db
+*.tmp

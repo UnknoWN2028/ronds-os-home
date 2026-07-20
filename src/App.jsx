@@ -55,7 +55,11 @@ function Brand({ compact = false }) {
 
 function Sidebar({ collapsed, mobileOpen, onClose, activePage }) {
   return (
-    <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
+    <aside
+      className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}
+      aria-hidden={collapsed && !mobileOpen ? "true" : undefined}
+      inert={collapsed && !mobileOpen ? "" : undefined}
+    >
       <div className="mobile-sidebar-head">
         <Brand compact={collapsed} />
         <button className="icon-button" onClick={onClose} aria-label="关闭导航">

@@ -215,15 +215,29 @@
 .tree-expand-placeholder { width: 18px; }
 
 .device-check {
+  box-sizing: border-box;
   width: 16px;
   height: 16px;
   display: grid;
   place-items: center;
+  overflow: hidden;
   color: #fff;
   border: 1px solid #92a9c7;
   padding: 0;
   font-size: 12px;
   line-height: 1;
+}
+
+.device-check svg {
+  display: block;
+  width: 11px;
+  height: 11px;
+  stroke-width: 2.8;
+}
+
+.device-check > span {
+  display: block;
+  transform: translateY(-1px);
 }
 
 .device-check.checked { background: #16a6e8; border-color: #27bcf7; }
@@ -679,6 +693,26 @@
   cursor: pointer;
 }
 
+.completion-chart {
+  width: 94px;
+  height: 94px;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.completion-chart circle {
+  fill: none;
+  stroke-width: 8;
+}
+
+.completion-chart-track { stroke: #244467; }
+
+.completion-chart-value {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 360ms ease;
+}
+
 .completion-ring strong {
   position: absolute;
   top: 50%;
@@ -877,14 +911,29 @@
   cursor: pointer;
 }
 
+.ptz-actions button.active {
+  color: #fff;
+  background: #176899;
+  border-color: #24a8e5;
+  box-shadow: inset 0 0 0 1px rgba(125, 211, 255, 0.16);
+}
+
+.ptz-actions button.recording {
+  background: #a53043;
+  border-color: #e65a70;
+}
+
 .ptz-content button:disabled { opacity: 0.45; cursor: not-allowed; }
 .ptz-message { grid-column: 1 / -1; margin: 0; color: #6faed4; font-size: 12px; }
 
-.playback-panel { display: grid; grid-template-rows: 36px 40px auto minmax(0, 1fr) 36px; }
-.playback-toolbar { display: flex; align-items: center; gap: 5px; padding: 4px 7px; border-bottom: 1px solid #29476c; }
-.playback-tabs { display: flex; }
+.playback-panel { display: grid; grid-template-rows: 36px auto auto minmax(0, 1fr) 36px; }
+.playback-toolbar { display: grid; gap: 5px; padding: 5px 7px; border-bottom: 1px solid #29476c; }
+.playback-toolbar-main { min-width: 0; display: flex; align-items: center; gap: 7px; }
+.playback-tabs { flex: none; display: flex; }
+.playback-actions { display: flex; justify-content: flex-end; gap: 5px; }
 .playback-tabs button,
 .playback-tool {
+  flex: none;
   height: 28px;
   display: inline-flex;
   align-items: center;
@@ -894,6 +943,7 @@
   color: #9eb4d2;
   background: #0d274d;
   cursor: pointer;
+  white-space: nowrap;
 }
 .playback-tabs button.active,
 .playback-tool.active { color: #fff; background: #176899; border-color: #2197ce; }
@@ -912,10 +962,104 @@
 .playback-table td:last-child { width: 42px; text-align: center; }
 .playback-table th button,
 .playback-table td button { border: 0; color: inherit; background: transparent; cursor: pointer; }
+.playback-table tbody tr.selected td { color: #eaf6ff; background: #174171; }
 .playback-pagination { display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 0 8px; color: #8fa6c5; border-top: 1px solid #29476c; }
 .playback-pagination span { margin-right: auto; }
 .playback-pagination button { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #35557e; color: inherit; background: transparent; cursor: pointer; }
 .playback-pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.playback-dialog-backdrop {
+  position: fixed;
+  z-index: 88;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(10, 24, 43, 0.58);
+}
+
+.playback-dialog {
+  width: min(760px, 94vw);
+  overflow: hidden;
+  color: #2f435e;
+  background: #fff;
+  border: 1px solid #d7e2ef;
+  border-radius: 8px;
+  box-shadow: 0 24px 72px rgba(16, 38, 69, 0.32);
+}
+
+.playback-dialog > header {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 17px;
+  border-bottom: 1px solid #dce5f1;
+}
+
+.playback-dialog > header div { min-width: 0; display: flex; align-items: center; gap: 11px; }
+.playback-dialog > header strong { flex: 0 0 auto; }
+.playback-dialog > header span { min-width: 0; overflow: hidden; color: #75869b; font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+.playback-dialog > header button { width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; color: #657890; background: transparent; cursor: pointer; }
+
+.playback-viewer {
+  position: relative;
+  height: 370px;
+  overflow: hidden;
+  background: #07182e;
+}
+
+.playback-viewer > img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(0.78) contrast(1.04) brightness(0.82); }
+.playback-viewer-time,
+.playback-viewer-camera { position: absolute; z-index: 2; top: 12px; color: #fff; background: rgba(4, 20, 42, 0.76); text-shadow: 0 1px 2px #000; }
+.playback-viewer-time { left: 12px; padding: 5px 8px; font-size: 12px; }
+.playback-viewer-camera { right: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; font-weight: 600; }
+.playback-viewer-camera i { width: 7px; height: 7px; border-radius: 50%; background: #21d175; box-shadow: 0 0 7px rgba(33, 209, 117, 0.6); }
+
+.playback-center-control {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #fff;
+  background: rgba(5, 22, 45, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.playback-dialog-controls {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  color: #eef5ff;
+  background: #07182e;
+}
+
+.playback-dialog-controls > button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; }
+.playback-dialog-controls > span { font-size: 12px; font-variant-numeric: tabular-nums; }
+.playback-dialog-controls input { min-width: 0; flex: 1; accent-color: #149ee9; }
+.playback-dialog-controls .playback-rate { width: 42px; border: 1px solid #405a78; border-radius: 4px; font-size: 12px; }
+
+.playback-dialog > footer {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 8px 16px;
+  border-top: 1px solid #e0e7f0;
+}
+
+.playback-dialog > footer span { display: inline-flex; align-items: center; gap: 5px; color: #71839a; font-size: 13px; }
+.playback-dialog > footer button { height: 32px; margin-left: auto; padding: 0 14px; color: #fff; background: #0869ee; border: 1px solid #0869ee; cursor: pointer; }
 
 .monitor-dialog-backdrop {
   position: fixed;
@@ -1173,6 +1317,8 @@
   border-right-color: #e2e9f2;
 }
 
+.monitor-page.embedded .completion-chart-track { stroke: #e2e9f2; }
+
 .monitor-page.embedded .completion-ring strong { color: #2a3d56; }
 .monitor-page.embedded .completion-ring span { color: #7d8da2; }
 
@@ -1247,6 +1393,8 @@
 .monitor-page.embedded .ptz-direction > span { color: #0869ee; }
 .monitor-page.embedded .ptz-adjust > span { color: #647992; }
 .monitor-page.embedded .ptz-message { color: #087ae8; }
+.monitor-page.embedded .ptz-actions button.active { color: #0869ee; background: #eaf2ff; border-color: #7eb4f7; }
+.monitor-page.embedded .ptz-actions button.recording { color: #d7354f; background: #ffe9ed; border-color: #f5a4b1; }
 .monitor-page.embedded .playback-toolbar,
 .monitor-page.embedded .playback-filter { border-bottom-color: #dde6f1; }
 .monitor-page.embedded .playback-tabs button,
@@ -1263,6 +1411,7 @@
 .monitor-page.embedded .playback-table th,
 .monitor-page.embedded .playback-table td { color: #61758e; border-bottom-color: #e1e8f1; }
 .monitor-page.embedded .playback-table th { color: #344862; background: #f3f7fc; }
+.monitor-page.embedded .playback-table tbody tr.selected td { color: #0869ee; background: #eaf2ff; }
 .monitor-page.embedded .playback-pagination { color: #657a94; border-top-color: #dde6f1; }
 .monitor-page.embedded .playback-pagination button { border-color: #d0dbe9; }
 
@@ -1309,4 +1458,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner { animation: none; }
+}
+
+@media (max-width: 700px) {
+  .playback-dialog-backdrop { padding: 12px; }
+  .playback-viewer { height: 240px; }
+  .playback-dialog > footer { align-items: flex-start; flex-wrap: wrap; gap: 7px 14px; }
+  .playback-dialog > footer button { margin-left: auto; }
 }

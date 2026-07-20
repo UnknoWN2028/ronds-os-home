@@ -7,11 +7,11 @@ import {
   IconBulb,
   IconBuildingFactory2,
   IconCamera,
+  IconCheck,
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconCircleCheck,
-  IconCirclePercentage,
   IconClock,
   IconColumns3,
   IconColumns,
@@ -214,7 +214,7 @@ function DevicePanel({ selected, onToggle, activeCameraId, onActivate }) {
               onClick={() => onToggle(childIds)}
               aria-label={`${checked ? "取消选择" : "选择"}${node.label}`}
             >
-              {mixed ? "−" : checked ? "✓" : ""}
+              {mixed ? <span aria-hidden="true">−</span> : checked ? <IconCheck aria-hidden="true" /> : ""}
             </button>
             <span className={`device-type status-${node.status ?? "group"}`} title={node.status ? statusCopy : undefined}>
               <DeviceIcon item={node} />
@@ -484,7 +484,18 @@ function SummaryPanel({ alarms, onFilter }) {
       <PanelTitle>今日监控报警看护</PanelTitle>
       <div className="summary-content">
         <button className="completion-ring" onClick={() => onFilter("all")} aria-label={`处理完成率${metrics.completion}%`}>
-          <IconCirclePercentage size={94} stroke={1.4} />
+          <svg className="completion-chart" viewBox="0 0 100 100" aria-hidden="true">
+            <circle className="completion-chart-track" cx="50" cy="50" r="43" />
+            <circle
+              className="completion-chart-value"
+              cx="50"
+              cy="50"
+              r="43"
+              pathLength="100"
+              strokeDasharray="100"
+              strokeDashoffset={100 - metrics.completion}
+            />
+          </svg>
           <strong>{metrics.completion}%</strong>
           <span>处理完成率</span>
         </button>
@@ -499,7 +510,7 @@ function SummaryPanel({ alarms, onFilter }) {
   );
 }
 
-function AlarmPanel({ alarms, filter, onFilter, onSelect }) {
+function AlarmPanel({ alarms, filter, onFilter, onSelect, locatedAlarmId }) {
   const listRef = useRef(null);
   const scrollPausedRef = useRef(false);
   const pendingCount = alarms.filter((alarm) => alarm.status === "pending").length;
@@ -547,11 +558,19 @@ function AlarmPanel({ alarms, filter, onFilter, onSelect }) {
     if (listRef.current) listRef.current.scrollTop = 0;
   }, [filter]);
 
+  useEffect(() => {
+    if (!locatedAlarmId || !listRef.current) return;
+    const target = listRef.current.querySelector(`[data-alarm-id="${locatedAlarmId}"]`);
+    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [locatedAlarmId, visibleAlarms]);
+
   return (
     <section className="monitor-panel alarm-panel">
       <PanelTitle>最近监控报警</PanelTitle>
       <div className="alarm-filter">
         <span>{filter === "processed" ? "今日处理" : filter === "defect" ? "已转缺陷" : "报警列表"}</span>
+        {filter === "processed" && <button className="active" onClick={() => onFilter("processed")}>已处理 {visibleAlarms.length}</button>}
+        {filter === "defect" && <button className="active" onClick={() => onFilter("defect")}>已转缺陷 {visibleAlarms.length}</button>}
         <button className={filter === "pending" ? "active" : ""} onClick={() => onFilter("pending")}>待处理 {pendingCount}</button>
         <button className={filter === "all" ? "active" : ""} onClick={() => onFilter("all")}>全部 {alarms.length}</button>
       </div>
@@ -567,7 +586,7 @@ function AlarmPanel({ alarms, filter, onFilter, onSelect }) {
         aria-label="最近监控报警，悬停暂停轮播"
       >
         {visibleAlarms.map((alarm) => (
-          <button className="alarm-card" key={alarm.id} onClick={() => onSelect(alarm)}>
+          <button className={`alarm-card ${locatedAlarmId === alarm.id ? "selected" : ""}`} data-alarm-id={alarm.id} key={alarm.id} onClick={() => onSelect(alarm)}>
             <img src={alarm.image} alt={`${alarm.title}报警画面缩略图`} />
             <span className="alarm-copy">
               <span className="alarm-heading">
@@ -589,11 +608,19 @@ function AlarmPanel({ alarms, filter, onFilter, onSelect }) {
 function PtzPanel({ camera }) {
   const [recording, setRecording] = useState(false);
   const [values, setValues] = useState({ zoom: 0, focus: 0, aperture: 0 });
+  const [switches, setSwitches] = useState({ talk: false, light: false, wiper: false });
   const [message, setMessage] = useState("等待控制指令");
   const unsupported = !camera || camera.status === "third-party";
   const unavailable = !camera || camera.status === "offline";
   const disabled = unsupported || unavailable;
   const disabledReason = unsupported ? "当前物设备不支持该功能" : unavailable ? "当前设备离线" : undefined;
+
+  useEffect(() => {
+    setRecording(false);
+    setValues({ zoom: 0, focus: 0, aperture: 0 });
+    setSwitches({ talk: false, light: false, wiper: false });
+    setMessage(camera ? "等待控制指令" : "未选择设备");
+  }, [camera?.id]);
 
   const runAction = (action) => {
     if (!disabled) setMessage(`${action}指令已发送`);
@@ -603,6 +630,15 @@ function PtzPanel({ camera }) {
     if (disabled) return;
     setValues((items) => ({ ...items, [key]: Math.max(-5, Math.min(5, items[key] + amount)) }));
     setMessage(`${key === "zoom" ? "调焦" : key === "focus" ? "聚焦" : "光圈"}已调整`);
+  };
+
+  const toggleSwitch = (key, label) => {
+    if (disabled) return;
+    setSwitches((items) => {
+      const next = !items[key];
+      setMessage(`${label}已${next ? "开启" : "关闭"}`);
+      return { ...items, [key]: next };
+    });
   };
 
   return (
@@ -631,10 +667,10 @@ function PtzPanel({ camera }) {
           ))}
         </div>
         <div className="ptz-actions">
-          <button disabled={disabled} title={disabledReason} onClick={() => runAction("对讲")}><IconMessageCircle size={17} />对讲</button>
-          <button disabled={disabled} title={disabledReason} onClick={() => runAction("补光灯")}><IconBulb size={17} />补光灯</button>
-          <button disabled={disabled} title={disabledReason} onClick={() => runAction("雨刷")}><IconDroplet size={17} />雨刷</button>
-          <button disabled={disabled} title={disabledReason} onClick={() => { setRecording((value) => !value); setMessage(recording ? "录像已停止" : "录像已开始"); }}>
+          <button className={switches.talk ? "active" : ""} aria-pressed={switches.talk} disabled={disabled} title={disabledReason} onClick={() => toggleSwitch("talk", "对讲")}><IconMessageCircle size={17} />{switches.talk ? "结束对讲" : "对讲"}</button>
+          <button className={switches.light ? "active" : ""} aria-pressed={switches.light} disabled={disabled} title={disabledReason} onClick={() => toggleSwitch("light", "补光灯")}><IconBulb size={17} />{switches.light ? "关闭补光" : "补光灯"}</button>
+          <button className={switches.wiper ? "active" : ""} aria-pressed={switches.wiper} disabled={disabled} title={disabledReason} onClick={() => toggleSwitch("wiper", "雨刷")}><IconDroplet size={17} />{switches.wiper ? "停止雨刷" : "雨刷"}</button>
+          <button className={recording ? "active recording" : ""} aria-pressed={recording} disabled={disabled} title={disabledReason} onClick={() => { setRecording((value) => !value); setMessage(recording ? "录像已停止" : "录像已开始"); }}>
             <IconVideo size={17} />{recording ? "停止录制" : "开始录制"}
           </button>
           <button disabled={disabled} title={disabledReason} onClick={() => runAction("重启")}><IconRefresh size={17} />重启</button>
@@ -656,6 +692,75 @@ function playbackRecords(camera) {
   }));
 }
 
+function formatPlaybackTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  return `${String(minutes).padStart(2, "0")}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+}
+
+function PlaybackDialog({ record, camera, onClose }) {
+  const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [rate, setRate] = useState(1);
+
+  useEffect(() => {
+    setPlaying(Boolean(record));
+    setPosition(0);
+    setRate(1);
+  }, [record?.id, camera?.id]);
+
+  useEffect(() => {
+    if (!record || !playing) return undefined;
+    const timer = window.setInterval(() => {
+      setPosition((value) => {
+        const next = Math.min(record.duration, value + 0.5 * rate);
+        if (next >= record.duration) setPlaying(false);
+        return next;
+      });
+    }, 500);
+    return () => window.clearInterval(timer);
+  }, [record, playing, rate]);
+
+  useEffect(() => {
+    if (!record) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [record, onClose]);
+
+  if (!record) return null;
+
+  const cycleRate = () => setRate((value) => value === 1 ? 1.5 : value === 1.5 ? 2 : 1);
+
+  return (
+    <div className="playback-dialog-backdrop" onMouseDown={onClose} role="presentation">
+      <section className="playback-dialog" role="dialog" aria-modal="true" aria-labelledby="playback-dialog-title" onMouseDown={(event) => event.stopPropagation()}>
+        <header>
+          <div><strong id="playback-dialog-title">录像回放</strong><span>{record.name}</span></div>
+          <button onClick={onClose} aria-label="关闭录像回放"><IconX size={20} /></button>
+        </header>
+        <div className="playback-viewer">
+          <img src={camera?.image} alt={`${camera?.label ?? "摄像头"}录像回放画面`} />
+          <span className="playback-viewer-time">{record.start}</span>
+          <span className="playback-viewer-camera"><i />{camera?.label ?? "未选择设备"}</span>
+          {!playing && <button className="playback-center-control" onClick={() => setPlaying(true)} aria-label="继续播放录像"><IconPlayerPlay size={36} /></button>}
+        </div>
+        <div className="playback-dialog-controls">
+          <button onClick={() => setPlaying((value) => !value)} aria-label={playing ? "暂停录像" : "播放录像"}>{playing ? <IconPlayerPause size={19} /> : <IconPlayerPlay size={19} />}</button>
+          <span>{formatPlaybackTime(position)}</span>
+          <input type="range" min="0" max={record.duration} step="1" value={position} onChange={(event) => setPosition(Number(event.target.value))} aria-label="录像播放进度" />
+          <span>{formatPlaybackTime(record.duration)}</span>
+          <button className="playback-rate" onClick={cycleRate} aria-label="切换播放倍速">{rate}×</button>
+        </div>
+        <footer>
+          <span><IconClock size={15} />{record.start}</span>
+          <span><IconVideo size={15} />{record.mode}</span>
+          <button onClick={onClose}>退出回放</button>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
 function PlaybackPanel({ camera, onFeedback }) {
   const [source, setSource] = useState("upper");
   const [sortKey, setSortKey] = useState("start");
@@ -664,6 +769,7 @@ function PlaybackPanel({ camera, onFeedback }) {
   const [modeFilter, setModeFilter] = useState("all");
   const [showDuration, setShowDuration] = useState(true);
   const [page, setPage] = useState(1);
+  const [previewRecord, setPreviewRecord] = useState(null);
   const pageSize = 4;
   const dualSource = camera?.status !== "third-party";
   const records = useMemo(() => playbackRecords(camera), [camera]);
@@ -675,7 +781,10 @@ function PlaybackPanel({ camera, onFeedback }) {
   const totalPages = Math.max(1, Math.ceil(sortedRecords.length / pageSize));
   const visibleRecords = sortedRecords.slice((page - 1) * pageSize, page * pageSize);
 
-  useEffect(() => setPage(1), [camera?.id, source, modeFilter]);
+  useEffect(() => {
+    setPage(1);
+    setPreviewRecord(null);
+  }, [camera?.id, source, modeFilter]);
 
   const changeSort = (key) => {
     if (sortKey === key) setAscending((value) => !value);
@@ -686,18 +795,25 @@ function PlaybackPanel({ camera, onFeedback }) {
   };
 
   return (
-    <section className="monitor-panel playback-panel">
+    <>
+      <section className="monitor-panel playback-panel">
       <PanelTitle>视频回放</PanelTitle>
       <div className="playback-toolbar">
-        {dualSource && (
-          <div className="playback-tabs" role="tablist" aria-label="视频来源">
-            <button className={source === "upper" ? "active" : ""} onClick={() => setSource("upper")} role="tab" aria-selected={source === "upper"}>上位机</button>
-            <button className={source === "lower" ? "active" : ""} onClick={() => setSource("lower")} role="tab" aria-selected={source === "lower"}>下位机</button>
+        <div className="playback-toolbar-main">
+          {dualSource && (
+            <div className="playback-tabs" role="tablist" aria-label="视频来源">
+              <button className={source === "upper" ? "active" : ""} onClick={() => setSource("upper")} role="tab" aria-selected={source === "upper"}>上位机</button>
+              <button className={source === "lower" ? "active" : ""} onClick={() => setSource("lower")} role="tab" aria-selected={source === "lower"}>下位机</button>
+            </div>
+          )}
+          <span className="playback-camera" title={camera?.label ?? "未选择设备"}>{camera?.label ?? "未选择设备"}</span>
+        </div>
+        {source === "upper" && (
+          <div className="playback-actions">
+            <button className="playback-tool" onClick={() => setFilterOpen((value) => !value)} aria-expanded={filterOpen}><IconFilter size={16} />筛选</button>
+            <button className={`playback-tool ${showDuration ? "active" : ""}`} onClick={() => setShowDuration((value) => !value)}><IconColumns size={16} />列设置</button>
           </div>
         )}
-        <span className="playback-camera">{camera?.label ?? "未选择设备"}</span>
-        {source === "upper" && <button className="playback-tool" onClick={() => setFilterOpen((value) => !value)} aria-expanded={filterOpen}><IconFilter size={16} />筛选</button>}
-        {source === "upper" && <button className={`playback-tool ${showDuration ? "active" : ""}`} onClick={() => setShowDuration((value) => !value)}><IconColumns size={16} />列设置</button>}
       </div>
       {filterOpen && source === "upper" && (
         <div className="playback-filter">
@@ -721,13 +837,13 @@ function PlaybackPanel({ camera, onFeedback }) {
             <th>操作</th>
           </tr></thead>
           <tbody>
-            {visibleRecords.map((record) => <tr key={`${source}-${record.id}`}>
+            {visibleRecords.map((record) => <tr className={previewRecord?.id === record.id ? "selected" : ""} key={`${source}-${record.id}`}>
               <td>{record.id}</td>
               <td title={record.name}>{record.name}</td>
               {source === "upper" && <td>{record.start}</td>}
               {source === "upper" && showDuration && <td>{Math.floor(record.duration / 60)}分{record.duration % 60}秒</td>}
               {source === "upper" && <td>{record.mode}</td>}
-              <td><button onClick={() => onFeedback(`正在加载 ${record.name}`, "info")} aria-label={`播放${record.name}`}><IconPlayerPlay size={15} /></button></td>
+              <td><button onClick={() => { setPreviewRecord(record); onFeedback(`${record.name} 已进入回放`, "info"); }} aria-label={`播放${record.name}`}><IconPlayerPlay size={15} /></button></td>
             </tr>)}
           </tbody>
         </table>
@@ -738,7 +854,9 @@ function PlaybackPanel({ camera, onFeedback }) {
         <b>{page}/{totalPages}</b>
         <button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={page === totalPages} aria-label="回放下一页"><IconChevronRight size={16} /></button>
       </div>
-    </section>
+      </section>
+      <PlaybackDialog record={previewRecord} camera={camera} onClose={() => setPreviewRecord(null)} />
+    </>
   );
 }
 
@@ -827,6 +945,7 @@ export function VideoMonitoring({ embedded = false }) {
   const [alarms, setAlarms] = useState(INITIAL_ALARMS);
   const [alarmFilter, setAlarmFilter] = useState("pending");
   const [detailAlarmId, setDetailAlarmId] = useState(null);
+  const [locatedAlarmId, setLocatedAlarmId] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const feedbackIdRef = useRef(0);
   const [activeCameraId, setActiveCameraId] = useState(DEFAULT_SELECTED_IDS[0] ?? null);
@@ -896,6 +1015,7 @@ export function VideoMonitoring({ embedded = false }) {
 
   const locateAlarm = (id) => {
     setDetailAlarmId(null);
+    setLocatedAlarmId(id);
     setAlarmFilter("all");
     setRightMode("alarms");
     setRightColumnOpen(true);
@@ -932,7 +1052,7 @@ export function VideoMonitoring({ embedded = false }) {
             {rightMode === "alarms" ? (
               <>
                 <SummaryPanel alarms={alarms} onFilter={setAlarmFilter} />
-                <AlarmPanel alarms={alarms} filter={alarmFilter} onFilter={setAlarmFilter} onSelect={(alarm) => setDetailAlarmId(alarm.id)} />
+                <AlarmPanel alarms={alarms} filter={alarmFilter} onFilter={setAlarmFilter} locatedAlarmId={locatedAlarmId} onSelect={(alarm) => { setLocatedAlarmId(alarm.id); setDetailAlarmId(alarm.id); }} />
               </>
             ) : (
               <>

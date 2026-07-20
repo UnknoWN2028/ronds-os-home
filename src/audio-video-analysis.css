@@ -105,7 +105,7 @@
 .source-reset-button { width: 34px; padding: 0; color: #42627e; background: #fff; border-color: #bfc8d1; }
 
 .source-selected-path { min-width: 0; display: flex; align-items: center; padding: 0 8px; overflow: hidden; color: #333d47; background: #edf0f3; border-bottom: 1px solid #d1d6dc; white-space: nowrap; text-overflow: ellipsis; }
-.source-analysis-body { min-width: 0; min-height: 0; display: flex; overflow: hidden; background: #fff; }
+.source-analysis-body { position: relative; min-width: 0; min-height: 0; display: flex; overflow: hidden; background: #fff; }
 .source-plots-scroll { min-width: 0; min-height: 0; flex: 1; display: flex; flex-direction: column; overflow: auto; background: #fff; }
 
 .diagnostic-plot { min-width: 580px; flex: 0 0 auto; background: #fff; }
@@ -126,18 +126,20 @@
 .plot-canvas svg { width: 100%; height: 100%; display: block; }
 .plot-grid { stroke: #cfd4da; stroke-width: 1; stroke-dasharray: 6 5; vector-effect: non-scaling-stroke; }
 .plot-guide { stroke: #3e78f6; stroke-width: 1; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+.plot-alarm-line { stroke: #ef3f4c; stroke-width: 1.2; stroke-dasharray: 7 4; vector-effect: non-scaling-stroke; }
 .plot-line { fill: none; stroke: #3679fa; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .plot-point { cursor: pointer; vector-effect: non-scaling-stroke; }
 .plot-point.empty { fill: #fff; stroke: #3679fa; stroke-width: 1.4; }
 .plot-point.attached { fill: #3679fa; stroke: #3679fa; stroke-width: 1; }
 .plot-point.alarm { fill: #f04444; stroke: #f04444; stroke-width: 1; }
 .plot-point.selected { stroke: #172e4c; stroke-width: 2.2; }
+.plot-point.false-signal { opacity: 0.26; stroke-dasharray: 2 2; }
+.plot-marker-ring { fill: none; stroke: #f0a21a; stroke-width: 2; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
 .plot-y-label, .plot-x-label { fill: #353d46; font: 12px "Microsoft YaHei", sans-serif; }
 .plot-x-label { fill: #6f7780; }
 .plot-tooltip { position: absolute; z-index: 3; display: grid; gap: 2px; min-width: 170px; padding: 7px 9px; color: #68717a; background: rgba(235, 238, 242, 0.96); border-radius: 2px; font-size: 11px; pointer-events: none; }
 .plot-tooltip b { color: #5c6671; font-weight: 500; }
 .plot-tooltip strong { margin-top: 3px; color: #d44747; font-weight: 600; }
-.plot-event-note { position: absolute; right: 10px; bottom: 25px; color: #8b9198; line-height: 1.5; }
 .source-empty-metrics { height: 250px; display: grid; place-items: center; place-content: center; gap: 9px; color: #9aa2aa; }
 
 .source-attachment-pane { position: relative; width: 220px; min-width: 220px; min-height: 0; display: grid; grid-template-rows: 34px minmax(0, 1fr); background: #f5f7fa; border-right: 1px solid #cfd6de; transition: width 160ms ease, min-width 160ms ease; }
@@ -221,6 +223,11 @@
 .analysis-framework-layout .diagnostic-plot > header { gap: 10px; }
 .analysis-framework-layout .source-attachment-pane { width: 188px; min-width: 188px; }
 .analysis-framework-layout .source-attachment-pane.collapsed { width: 34px; min-width: 34px; }
+.analysis-framework-layout .attachment-content {
+  grid-template-rows: auto 188px auto;
+  align-content: start;
+  background: #f5f7fa;
+}
 
 .framework-tool-strip {
   gap: 0;
@@ -312,6 +319,30 @@
 }
 
 .chart-operation-strip button:hover { color: #176fe8; background: #eaf2ff; }
+.chart-operation-strip button.active { color: #176fe8; background: #e6f1ff; box-shadow: inset 0 -2px #176fe8; }
+
+.analysis-framework-layout.is-fullscreen { background: #fff; }
+
+.analysis-loading {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  place-content: center;
+  gap: 10px;
+  color: #42627f;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(1px);
+}
+
+.analysis-loading svg { color: #176fe8; animation: analysis-spin 700ms linear infinite; }
+
+@keyframes analysis-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .analysis-loading svg { animation: none; }
+}
 
 .analysis-operation-pane {
   position: relative;
@@ -347,6 +378,7 @@
 
 .operation-resize-handle:hover::after,
 .analysis-resizing .operation-resize-handle::after { width: 3px; left: 2px; background: #2c7df0; }
+.operation-resize-handle:focus-visible { outline: 2px solid #2c7df0; outline-offset: -2px; }
 body.analysis-resizing { cursor: col-resize; user-select: none; }
 
 .operation-pane-title {
@@ -398,9 +430,12 @@ body.analysis-resizing { cursor: col-resize; user-select: none; }
 }
 
 .operation-date input { min-width: 0; width: 100%; padding: 0; color: #3e4b59; background: transparent; border: 0; outline: 0; font: inherit; }
+.operation-date:has(input:disabled) { background: #f2f4f6; }
+.operation-date input:disabled { color: #8e99a5; cursor: wait; }
 .operation-date input::-webkit-calendar-picker-indicator { display: none; }
 
 .selected-node-card {
+  width: 100%;
   min-height: 48px;
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr) 18px;
@@ -411,7 +446,11 @@ body.analysis-resizing { cursor: col-resize; user-select: none; }
   background: #eef6ff;
   border: 1px solid #bdd7f5;
   border-radius: 2px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
+.selected-node-card:hover { background: #e4f1ff; border-color: #8cbef2; }
 
 .selected-node-card > div { min-width: 0; display: grid; gap: 3px; }
 .selected-node-card strong { overflow: hidden; color: #34465a; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
@@ -422,6 +461,7 @@ body.analysis-resizing { cursor: col-resize; user-select: none; }
 .operation-metric-group > strong { color: #607286; font-size: 10px; font-weight: 600; }
 .operation-metric-group label { min-height: 24px; display: flex; align-items: center; gap: 7px; color: #35485d; cursor: pointer; }
 .operation-metric-group input { accent-color: #176fe8; }
+.operation-metric-group input:disabled { cursor: wait; opacity: 0.6; }
 .operation-data-section { padding: 0; gap: 0; }
 .operation-data-section .operation-section-title { height: 38px; padding: 0 12px; border-bottom: 1px solid #dce2e8; }
 .operation-data-table { min-width: 0; display: grid; }
@@ -438,6 +478,7 @@ body.analysis-resizing { cursor: col-resize; user-select: none; }
 .operation-data-table i.empty { background: #fff; border: 1px solid #397bf2; }
 .operation-data-table i.attached { background: #397bf2; border: 1px solid #397bf2; }
 .operation-data-table i.alarm { background: #ed4747; border: 1px solid #ed4747; }
+.operation-data-empty { min-height: 72px; display: grid; place-items: center; color: #9aa4af; background: #fff; }
 
 .operation-actions {
   display: grid;
@@ -452,6 +493,38 @@ body.analysis-resizing { cursor: col-resize; user-select: none; }
 
 .operation-actions .source-reset-button,
 .operation-actions .source-analyze-button { width: 100%; height: 34px; gap: 5px; }
+.operation-actions button:disabled { opacity: 0.58; cursor: wait; }
+
+.analysis-settings-modal {
+  width: min(430px, 92vw);
+  overflow: hidden;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 24px 70px rgba(22, 38, 58, 0.28);
+}
+
+.analysis-settings-modal > header {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 13px;
+  color: #2e5f9b;
+  border-bottom: 1px solid #d9e0e7;
+}
+
+.analysis-settings-modal > header > div { display: flex; align-items: center; gap: 7px; }
+.analysis-settings-modal > header button { width: 29px; height: 29px; display: grid; place-items: center; padding: 0; color: #65768a; background: transparent; border: 0; cursor: pointer; }
+.settings-options { display: grid; padding: 8px 14px; }
+.settings-options label { min-height: 58px; display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center; gap: 9px; border-bottom: 1px solid #edf0f3; cursor: pointer; }
+.settings-options label:last-child { border-bottom: 0; }
+.settings-options input { accent-color: #176fe8; }
+.settings-options span { display: grid; gap: 4px; }
+.settings-options b { color: #35485c; font-weight: 500; }
+.settings-options small { color: #8995a2; }
+.analysis-settings-modal > footer { height: 50px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 13px; background: #f7f9fb; border-top: 1px solid #dce2e8; }
+.analysis-settings-modal > footer button { height: 30px; min-width: 68px; padding: 0 14px; color: #4d6074; background: #fff; border: 1px solid #bcc7d2; cursor: pointer; }
+.analysis-settings-modal > footer button.primary { color: #fff; background: #176fe8; border-color: #176fe8; }
 
 @media (max-width: 1250px) {
   .analysis-content-card { overflow: auto; }
