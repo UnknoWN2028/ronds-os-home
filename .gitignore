@@ -23,6 +23,10 @@ coverage/
 # Local comparison and implementation screenshots
 *.png
 !src/assets/rh830-visible-light.png
+!src/assets/monitor-*.png
+!src/assets/equipment-space-*.png
+!src/assets/equipment-location-*.png
+!src/assets/diagnosis-*.png
 src/assets/*-source-visual.svg
 
 # Editor and operating-system files
