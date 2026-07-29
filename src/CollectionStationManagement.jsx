@@ -18,14 +18,14 @@ import {
 import "./collection-station.css";
 
 const initialStations = [
-  { id: 1, name: "原料区采集站", code: "CS-YL-001", area: "原料车间", address: "1号料仓东侧", devices: 18, protocol: "OPC UA", ip: "10.10.12.21", status: "在线", enabled: true, updatedAt: "2026-07-17 15:26:18", owner: "张伟" },
-  { id: 2, name: "1号皮带采集站", code: "CS-PD-002", area: "输送廊道", address: "1号廊道中段", devices: 12, protocol: "Modbus TCP", ip: "10.10.12.35", status: "在线", enabled: true, updatedAt: "2026-07-17 15:25:46", owner: "李强" },
-  { id: 3, name: "2号皮带采集站", code: "CS-PD-003", area: "输送廊道", address: "2号廊道北端", devices: 16, protocol: "MQTT", ip: "10.10.12.42", status: "离线", enabled: true, updatedAt: "2026-07-17 14:58:03", owner: "王琳" },
-  { id: 4, name: "破碎机房采集站", code: "CS-PS-004", area: "破碎车间", address: "控制柜A03", devices: 9, protocol: "Modbus TCP", ip: "10.10.13.18", status: "告警", enabled: true, updatedAt: "2026-07-17 15:21:12", owner: "赵鹏" },
-  { id: 5, name: "配电室采集站", code: "CS-PD-005", area: "动力中心", address: "高压配电室", devices: 24, protocol: "IEC 104", ip: "10.10.14.11", status: "在线", enabled: true, updatedAt: "2026-07-17 15:26:02", owner: "周敏" },
-  { id: 6, name: "环保监测采集站", code: "CS-HB-006", area: "环保设施区", address: "除尘站二层", devices: 8, protocol: "MQTT", ip: "10.10.15.27", status: "在线", enabled: true, updatedAt: "2026-07-17 15:24:39", owner: "陈浩" },
-  { id: 7, name: "成品仓采集站", code: "CS-CP-007", area: "成品仓库", address: "仓库西门", devices: 11, protocol: "OPC UA", ip: "10.10.16.16", status: "离线", enabled: true, updatedAt: "2026-07-17 13:42:07", owner: "刘洋" },
-  { id: 8, name: "备用采集站", code: "CS-BY-008", area: "设备间", address: "备件库一层", devices: 0, protocol: "Modbus TCP", ip: "10.10.16.28", status: "已停用", enabled: false, updatedAt: "2026-07-15 09:12:35", owner: "孙悦" },
+  { id: 1, name: "1号锅炉采集站", code: "CS-GL-001", area: "锅炉区域", address: "1号锅炉给煤层", devices: 18, protocol: "OPC UA", ip: "10.10.12.21", status: "在线", enabled: true, updatedAt: "2026-07-17 15:26:18", owner: "张伟" },
+  { id: 2, name: "310A皮带采集站", code: "CS-SM-002", area: "输煤系统", address: "1号输煤廊道中段", devices: 12, protocol: "Modbus TCP", ip: "10.10.12.35", status: "在线", enabled: true, updatedAt: "2026-07-17 15:25:46", owner: "李强" },
+  { id: 3, name: "310B皮带采集站", code: "CS-SM-003", area: "输煤系统", address: "2号输煤廊道北端", devices: 16, protocol: "MQTT", ip: "10.10.12.42", status: "离线", enabled: true, updatedAt: "2026-07-17 14:58:03", owner: "王琳" },
+  { id: 4, name: "碎煤机室采集站", code: "CS-SM-004", area: "输煤系统", address: "1号碎煤机控制柜A03", devices: 9, protocol: "Modbus TCP", ip: "10.10.13.18", status: "告警", enabled: true, updatedAt: "2026-07-17 15:21:12", owner: "赵鹏" },
+  { id: 5, name: "升压站采集站", code: "CS-DQ-005", area: "电气系统", address: "220kV升压站继保室", devices: 24, protocol: "IEC 104", ip: "10.10.14.11", status: "在线", enabled: true, updatedAt: "2026-07-17 15:26:02", owner: "周敏" },
+  { id: 6, name: "脱硫区域采集站", code: "CS-HB-006", area: "环保设施区", address: "1号脱硫吸收塔", devices: 8, protocol: "MQTT", ip: "10.10.15.27", status: "在线", enabled: true, updatedAt: "2026-07-17 15:24:39", owner: "陈浩" },
+  { id: 7, name: "1号汽机采集站", code: "CS-QJ-007", area: "汽机区域", address: "1号汽轮机组轴承层", devices: 11, protocol: "OPC UA", ip: "10.10.16.16", status: "离线", enabled: true, updatedAt: "2026-07-17 13:42:07", owner: "刘洋" },
+  { id: 8, name: "检修备用采集站", code: "CS-BY-008", area: "检修区域", address: "综合检修间", devices: 0, protocol: "Modbus TCP", ip: "10.10.16.28", status: "已停用", enabled: false, updatedAt: "2026-07-15 09:12:35", owner: "孙悦" },
 ];
 
 const blankStation = {

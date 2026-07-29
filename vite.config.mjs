@@ -8,6 +8,16 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     allowedHosts: ["terminal.local"],
+    watch: {
+      ignored: [
+        "**/.edge-*/**",
+        "**/dist/**",
+        "**/*-dist/**",
+        "**/*.html",
+        "**/*.png",
+        "**/*.log",
+      ],
+    },
     warmup: {
       clientFiles: ["./src/main.jsx"],
     },

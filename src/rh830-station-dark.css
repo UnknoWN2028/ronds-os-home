@@ -1,0 +1,1763 @@
+/* 采集站管理：深蓝工业配置工作台视觉基线 */
+:is(.stations-shell, #root:has(> .rh-page)){
+  --station-bg:#06182f;
+  --station-deep:#041328;
+  --station-panel:#132b52;
+  --station-panel-2:#102746;
+  --station-panel-3:#0b213e;
+  --station-line:#29466d;
+  --station-line-soft:#203a5f;
+  --station-text:#b8c9e2;
+  --station-muted:#7893b7;
+  --station-cyan:#0aa7f5;
+  --station-cyan-soft:#153e6e;
+  --station-green:#18d99a;
+  --station-red:#ff4f68;
+  --station-amber:#f2b451;
+  --station-surface:#0b213e;
+  --station-surface-raised:#102746;
+  --station-surface-active:#15365d;
+  --station-control:#091e38;
+  --station-border:#29466d;
+  --station-border-strong:#35577f;
+  background:var(--station-deep);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .topbar{
+  color:var(--station-text);
+  background:#071a34;
+  border-bottom-color:#1d3c63;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .brand-name{color:#dceaff}
+:is(.stations-shell, #root:has(> .rh-page)) .brand-mark{color:#7fdcff;background:#0a4e82}
+:is(.stations-shell, #root:has(> .rh-page)) .app-switcher,
+:is(.stations-shell, #root:has(> .rh-page)) .icon-button,
+:is(.stations-shell, #root:has(> .rh-page)) .user-button{color:#8ba8cb}
+:is(.stations-shell, #root:has(> .rh-page)) .app-switcher:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .icon-button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .user-button:hover{color:#4fcaff;background:#102e52}
+:is(.stations-shell, #root:has(> .rh-page)) .sidebar{
+  color:var(--station-text);
+  background:#06172d;
+  border-right-color:#1d3b60;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .sidebar .nav-item{color:#7f9cbe}
+:is(.stations-shell, #root:has(> .rh-page)) .sidebar .nav-item:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .sidebar .nav-item.active{color:#56cbff;background:#12375e}
+:is(.stations-shell, #root:has(> .rh-page)) .sidebar-resizer{background:#1c395c}
+:is(.stations-shell, #root:has(> .rh-page)) .collapse-button{color:#75bfe9;background:#0b2747;border-color:#31587d}
+:is(.stations-shell, #root:has(> .rh-page)) .assistant{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .workspace{
+  padding:calc(var(--header-height) + 6px) 8px 8px;
+  background:var(--station-deep);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .station-content-card{
+  background:var(--station-bg);
+  border-color:#18385d;
+  box-shadow:inset 0 0 0 1px rgba(17,73,116,.28);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page{
+  color:var(--station-text);
+  background:var(--station-bg);
+  font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-workbench{
+  min-height:680px;
+  grid-template-columns:248px minmax(0,1fr);
+  background:var(--station-bg);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-workbench.tree-hidden{grid-template-columns:0 minmax(0,1fr)}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree{
+  color:var(--station-text);
+  background:#04162c;
+  border-right:8px solid #1c324d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search{
+  height:48px;
+  grid-template-columns:1fr;
+  padding:7px 7px 6px;
+  background:#071a34;
+  border-bottom-color:#213f66;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search label:nth-child(2){display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search input{
+  height:34px;
+  padding:0 34px 0 9px;
+  color:#d1dff1;
+  background:#0a203e;
+  border-color:#335276;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search input:focus{
+  border-color:var(--station-cyan);
+  box-shadow:0 0 0 2px rgba(10,167,245,.12);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search input::placeholder{color:#7290b4}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-search svg{top:9px;color:#a9bfda}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-status{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-columns{
+  height:28px;
+  color:#6886aa;
+  background:#071a34;
+  border-bottom-color:#1c385c;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-root{
+  height:36px;
+  color:#d5e4f7;
+  background:#06192f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-root svg:nth-child(2){color:var(--station-green)}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list{
+  height:calc(100% - 112px);
+  padding:0 7px 14px 29px;
+  scrollbar-color:#0b6eaa #071a34;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-region-group{border-bottom:1px solid rgba(43,75,113,.34)}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-region-node{
+  min-height:32px;
+  color:#86a7cc;
+  background:#06182f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-region-node small{color:#58789e}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button{
+  min-height:31px;
+  grid-template-columns:91px minmax(0,1fr) 36px;
+  color:#9ab0ca;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button:before,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button:after{background:#24466d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button:hover{color:#d7e8fb;background:#0d2b4d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button.selected{
+  color:#fff;
+  background:#0e9fe8;
+  box-shadow:inset 3px 0 #56d6ff;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list>button.selected em{color:#eaf7ff}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list svg{color:#6e8baa}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list svg.online{color:var(--station-green)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-code-list em{color:#89a0bd}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tree-handle{
+  left:240px;
+  width:16px;
+  height:54px;
+  color:#b5cce5;
+  background:#1a385b;
+  border:1px solid #2c5078;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .tree-hidden .rh-tree-handle{left:0}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main{
+  grid-template-rows:50px 166px 88px minmax(0,1fr);
+  padding:0 8px 8px 12px;
+  background:var(--station-bg);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page-label{
+  width:max-content;
+  height:50px;
+  align-self:center;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  color:#2bbaff;
+  background:#0b203e;
+  border:1px solid #29496f;
+  border-left:1px solid #29496f;
+  font-size:16px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page-label>strong{color:#2bbaff;font-size:16px;font-weight:500}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page-label>.rh-runtime,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page-label>.rh-current-station,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-page-label>.rh-version-state{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode{
+  grid-template-rows:50px 166px 88px minmax(0,1fr);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-head{
+  min-height:0;
+  padding:12px 13px 10px;
+  color:var(--station-text);
+  background:var(--station-panel);
+  border:1px solid #1c3a63;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-head-top{
+  height:42px;
+  gap:10px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-head-top>label{
+  flex:0 1 560px;
+  min-width:380px;
+  color:#a8bdd8;
+  font-size:14px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-head-top select{
+  width:min(470px,calc(100% - 88px));
+  height:36px;
+  color:#c5d7ed;
+  background:#102847;
+  border-color:#375578;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-inline-context{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-actions{
+  gap:8px;
+  margin-left:auto;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions>button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions>div>button{
+  height:36px;
+  padding:0 13px;
+  color:#88a3c7;
+  background:#1a355e;
+  border-color:#1a355e;
+  border-radius:2px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions>button:hover{
+  color:#e5f4ff;
+  background:#214775;
+  border-color:#2b5d91;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions .save{
+  min-width:76px;
+  color:#fff;
+  background:#0aa7f5;
+  border-color:#0aa7f5;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions [data-action="config-review"],
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions>div,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions .discard{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-meta{
+  min-height:43px;
+  margin-top:5px;
+  padding:0;
+  color:#a9bdd7;
+  background:transparent;
+  border:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-meta b{color:#c7d8eb}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-device{
+  min-height:46px;
+  padding:4px 0 0;
+  color:#a8bdd8;
+  background:transparent;
+  border:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-device-chip{
+  color:#b8cce5;
+  background:#132c50;
+  border-color:#38587d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-device strong{
+  color:#c6d8ec;
+  background:transparent;
+  border:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-single-camera-note{color:#7996b9}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails:not(.board-compact){
+  height:44px;
+  background:var(--station-panel);
+  border:1px solid #1c3a63;
+  border-top:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails:not(.board-compact) .rh-primary{
+  height:44px;
+  align-items:center;
+  gap:36px;
+  padding:0 14px;
+  background:var(--station-panel);
+  border-bottom:1px solid #24456d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails:not(.board-compact) .rh-primary button{
+  height:44px;
+  color:#94a9c4;
+  font-size:14px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails:not(.board-compact) .rh-primary button.active{
+  color:#20b5ff;
+  font-weight:500;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact{
+  height:88px;
+  grid-template-columns:1fr;
+  grid-template-rows:44px 44px;
+  align-items:stretch;
+  background:var(--station-panel);
+  border:1px solid #1c3a63;
+  border-top:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-primary,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-secondary{
+  height:44px;
+  align-items:center;
+  gap:36px;
+  padding:0 14px;
+  background:var(--station-panel);
+  border:0;
+  border-bottom:1px solid #24456d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-primary{border-right:0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-secondary{
+  padding-left:36px;
+  background:#11294e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-primary button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-secondary button{
+  height:44px;
+  color:#94a9c4;
+  font-size:14px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-primary button.active,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tab-rails.board-compact .rh-secondary button.active{
+  color:#20b5ff;
+  font-weight:500;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-primary button.active:after,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-secondary button.active:after{
+  height:2px;
+  background:#1fb7ff;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-body{padding-top:0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-content{background:#0b213e}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-annotation-layout{
+  grid-template-columns:minmax(440px,43%) minmax(520px,57%);
+  gap:12px;
+  padding:12px;
+  background:#0b213e;
+  border:1px solid #1c3b63;
+  border-top:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-annotation-main{
+  grid-template-rows:auto minmax(0,1fr);
+  background:var(--station-panel-2);
+  border:1px solid #28486f;
+  border-radius:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-hik-context-bar{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind{
+  min-height:88px;
+  grid-template-columns:minmax(0,1fr) minmax(0,.85fr) 88px;
+  grid-template-rows:auto 14px;
+  gap:4px 10px;
+  padding:12px 12px 8px;
+  background:#102746;
+  border-bottom:1px solid #2a496f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-field{gap:6px}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-field>span{
+  color:#aebfd5;
+  font-size:13px;
+  font-weight:500;
+  line-height:16px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-field>button{
+  height:38px;
+  color:#a9bfd9;
+  background:#0d2340;
+  border-color:#385778;
+  border-radius:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-field>button:hover{border-color:#178fd4}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-action .bind{
+  height:38px;
+  color:#fff;
+  background:#0aa7f5;
+  border-radius:2px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-action .bind:disabled{
+  color:#6f8cac;
+  background:#173657;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-bind-action .bind.complete:disabled{
+  color:#58d3aa;
+  background:#123f46;
+  border-color:#23766a;
+  opacity:1;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-bind-status-line{color:#6687ad}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-bind-status-line.ready{color:#41d5a2}
+
+/* Board parameter pages share the same deep-blue workbench palette. */
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel{
+  color:#b9cce3;
+  background:#0b203c;
+  border-color:#29496f;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel>header{
+  background:#102846;
+  border-bottom-color:#2c4b70;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel>header b{
+  color:#d2e0ef;
+  font-weight:600;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel>header span{color:#8ca6c4}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel>header em{color:#7390b1}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings{color:#b8cae0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings th,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings td{
+  border-bottom-color:#29496e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings th{
+  color:#8faccc;
+  background:#132d53;
+  font-weight:600;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings td{background:#0d2340}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings tbody tr:hover td{background:#102a49}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings td:first-child{color:#a9bfd8}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings td:nth-child(3){color:#7895b6}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings select,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-setting-input{
+  color:#d5e2f1;
+  background:#091e38;
+  border-color:#355477;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings select{color-scheme:dark}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-setting-input input{
+  color:#d5e2f1;
+  background:transparent;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-setting-input input::placeholder{color:#5f7d9e}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-setting-input span{
+  color:#8da7c5;
+  border-left-color:#315074;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings select:focus,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-setting-input:focus-within{
+  border-color:#18aef4;
+  box-shadow:0 0 0 1px rgba(24,174,244,.18);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings tr.invalid td{background:#301d2c}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings tr.invalid .rh-setting-input{border-color:#f05a68}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings tr.disabled{opacity:.55}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-settings .rh-setting-error{color:#ff7785}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel .rh-toggle{background:#31506f}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel .rh-toggle span{background:#c7d6e5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-config-panel .rh-toggle.on{background:#0aa7f5}
+
+/* 属性页与深蓝工作台保持同一套表面、边界和文字层级。 */
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties{
+  color:#b8cae0;
+  background:#071a31;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties aside{
+  background:#081d37;
+  border-right-color:#29476d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties aside button{
+  color:#8da8c8;
+  background:transparent;
+  border-right:2px solid transparent;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties aside button:hover{
+  color:#d5e5f6;
+  background:#102b4b;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties aside button.active{
+  color:#35bfff;
+  background:#123456;
+  border-right-color:#17adf2;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties-body,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-property-basic,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-property-section{
+  background:#0b213e;
+  scrollbar-color:#167eb5 #071a31;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-property-grid div{
+  background:#0d2646;
+  border-color:#29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-property-grid div:nth-child(even){
+  background:#0b223f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties dt,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties dd{
+  border-right-color:#29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties dt{
+  color:#7897ba;
+  background:rgba(8,29,55,.42);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties dd{color:#bed0e6}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-board-title{
+  color:#b9cce2;
+  background:#102a49;
+  border-color:#29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-board-title:hover{
+  color:#e3f1ff;
+  background:#153659;
+  border-color:#3571a2;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties table{
+  color:#a9bfd8;
+  background:#0b213e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties th,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties td{
+  border-bottom:1px solid #29476d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties th{
+  color:#88a8ca;
+  background:#173253;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties tbody tr{background:#0d2543}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties tbody tr:nth-child(even){background:#102946}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-properties tbody tr:hover{background:#153657}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-property-bottom div:last-child{border-bottom-color:#29486e}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-section-head{
+  color:#c4d5e8;
+  border-bottom:1px solid #29476d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-section-head span{color:#7895b6}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-section-head button{
+  color:#3fc2fb;
+  background:#102b4a;
+  border-color:#32638f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-section-head button:hover{
+  color:#fff;
+  background:#164269;
+  border-color:#159fdf;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-groups{
+  gap:12px;
+  padding:12px;
+  background:#0b203c;
+  scrollbar-color:#0a6da7 #0b203c;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-binding-summary{
+  min-height:42px;
+  color:#b6c9e1;
+  background:#102846;
+  border-color:#28486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-binding-summary span{
+  color:#35baff;
+  background:#123a68;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-binding-summary small{color:#7894b7}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-group{
+  color:#b8c9e1;
+  background:#122a4e;
+  border-color:#335175;
+  border-radius:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-group>header{
+  min-height:56px;
+  padding:0 12px;
+  background:#132d53;
+  border-bottom:1px solid #315075;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-group>header>div{
+  min-width:0;
+  flex:1;
+  overflow:hidden;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-group>header strong{color:#c8d8ea}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-group-path{color:#18aefa}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-group-view{
+  flex:0 0 auto;
+  padding:3px 6px;
+  color:#65cef8;
+  background:#103a60;
+  border:1px solid #285a82;
+  font-size:9px;
+  white-space:nowrap;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-group-view>b{
+  margin-right:3px;
+  color:#a9e6ff;
+  font-weight:600;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-group>header em{
+  color:#24b5ff;
+  background:#0d3b6d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-collapse{color:#87a6c8}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-group>div{padding:0}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-algorithm{
+  min-height:182px;
+  padding:15px 15px 13px;
+  color:#b7c9e1;
+  background:#122a4e;
+  border-bottom-color:#2b486b;
+  border-left-width:3px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-algorithm:hover{background:#153157}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-algorithm.selected{
+  background:#142f55;
+  border-left-color:#18aff8;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title>div:first-child>span{color:#d2e0f0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title>div:first-child>em{
+  color:#31baff;
+  background:#103a67;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title>div:first-child>small.visible{
+  color:#52d8ab;
+  background:#113e43;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title button{color:#32baff}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title button.edit-region{
+  color:#31baff;
+  background:#12385f;
+  border-color:#27618b;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-algorithm-title button.danger{color:var(--station-red)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delete-group{color:var(--station-red)}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-function-fields{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) 30px;
+  gap:10px 12px;
+  margin-top:13px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-function-fields small{color:#7895b8}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-text-edit{
+  color:#b5cae2;
+  background:#102643;
+  border:1px solid #2d4a6e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-text-edit:hover{border-color:#168ed2}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-location{grid-column:1/-1}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-location input{
+  color:#b8cce4;
+  background:#0d2340;
+  border-color:#345173;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-location input::placeholder{color:#6885a7}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-color-input{background:#0b203c;border-color:#38577b}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview.hikvision{
+  grid-template-rows:52px 58px minmax(0,1fr);
+  color:#b9cbe2;
+  background:#0b213e;
+  border:1px solid #28486e;
+  border-radius:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview>header{
+  min-height:52px;
+  padding:0 14px;
+  background:#102746;
+  border-bottom-color:#29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-title>span{
+  color:#2bb8ff;
+  border-bottom-color:#20b5ff;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-title{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-title small{
+  min-width:0;
+  overflow:hidden;
+  color:#a8bdd5;
+  font-size:10px;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-camera-capability{
+  color:#42c4ff;
+  background:#12395f;
+  border-color:#2b6188;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools{
+  min-height:58px;
+  padding:0 12px;
+  background:#102746;
+  border-bottom-color:#29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools button.snapshot{
+  width:36px;
+  height:36px;
+  color:#6fa7da;
+  background:transparent;
+  border:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools button:hover{
+  color:#bceaff;
+  background:#153a63;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools button.snapshot{
+  color:#fff;
+  background:#0aa7f5;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools>button.snapshot{
+  color:#42c4ff;
+  background:#12395f;
+  border:1px solid #2b6188;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-annotation-toolset button.active{
+  color:#fff;
+  background:#0aa7f5;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools .rh-stream-switch{
+  order:-1;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools .rh-stream-switch button{
+  width:auto;
+  min-width:64px;
+  color:#8fa9c7;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools .rh-stream-switch button.active,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools .rh-stream-switch button.active.thermal{
+  color:#2dbbff;
+  background:transparent;
+  box-shadow:inset 0 -2px #20b5ff;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview-tools output{color:#9ab1cb}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-strip{display:none}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-camera{
+  min-height:0;
+  background:#071a31;
+  border-top:1px solid #1b3557;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-camera-stage img{background:#071a31}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-tip{
+  top:auto;
+  right:10px;
+  bottom:10px;
+  background:rgba(4,18,35,.86);
+  border:1px solid #284b70;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-preview-empty{
+  color:#7897b9;
+  background:rgba(7,26,49,.92);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-more{
+  color:#b5c9df;
+  background:#102847;
+  border-color:#2c4d74;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-more button{color:#a9bfd7;background:#102847}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-more button:hover{color:#fff;background:#17385f}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal-backdrop{background:rgba(1,10,22,.72)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal{
+  color:#c3d4e7;
+  background:#102746;
+  border-color:#31567f;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal>header{
+  background:#132d53;
+  border-bottom-color:#315175;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal>footer{border-top-color:#315175}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal>footer button{color:#b3c7de;background:#1a385e}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-modal>footer button.primary{color:#fff;background:#0aa7f5}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-command-status,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-toast{
+  color:#e4f3ff;
+  background:#0b4e7d;
+  border:1px solid #2375a6;
+}
+
+@media(max-width:1240px){
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-workbench{grid-template-columns:220px minmax(0,1fr)}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-tree-handle{left:212px}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main{padding-left:8px}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-head-top>label{min-width:300px}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.board-mode .rh-actions>button{padding:0 9px}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-annotation-layout{
+    grid-template-columns:minmax(400px,46%) minmax(500px,54%);
+    gap:8px;
+    padding:8px;
+  }
+}
+
+@media(max-width:1100px){
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-workbench{grid-template-columns:0 minmax(980px,1fr)}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-tree{
+    position:absolute;
+    z-index:80;
+    inset:0 auto 0 0;
+    width:248px;
+    border-right-width:1px;
+    box-shadow:18px 0 34px rgba(0,8,20,.42);
+  }
+  :is(.stations-shell, #root:has(> .rh-page)) .tree-hidden .rh-tree{visibility:hidden}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-tree-handle{left:240px}
+  :is(.stations-shell, #root:has(> .rh-page)) .tree-hidden .rh-tree-handle{left:0}
+}
+
+/* 海康测点算法标注与实时云台控制 */
+:is(.stations-shell, #root:has(> .rh-page)) .rh-binding-summary-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preview.hikvision{
+  grid-template-rows:52px 58px auto minmax(0,1fr);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-strip{
+  min-height:68px;
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) auto auto auto;
+  grid-template-rows:1fr;
+  align-items:center;
+  gap:10px;
+  padding:7px 12px;
+  color:#a8bdd7;
+  background:#0d2340;
+  border-bottom:1px solid #29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-strip.fixed{
+  min-height:54px;
+  grid-template-columns:1fr;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status{
+  grid-column:auto;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding-right:12px;
+  border-right:1px solid #29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-strip.fixed .rh-ptz-status{
+  padding-right:0;
+  border-right:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status>span{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  color:#31baff;
+  background:#123b66;
+  border-radius:2px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status>div{min-width:0;flex:1}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status b{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#c5d7ea;
+  font-size:12px;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status b>em{
+  padding:2px 5px;
+  color:#4fd4ae;
+  background:#123f46;
+  border:1px solid #246b64;
+  font-size:8px;
+  font-style:normal;
+  font-weight:500;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status small{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:4px;
+  color:#86a4c5;
+  font-size:9px;
+  white-space:nowrap;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status small>span{
+  color:#93b1cf;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status small>em{
+  min-width:0;
+  overflow:hidden;
+  color:#54c9f7;
+  font-style:normal;
+  text-overflow:ellipsis;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-directions{
+  display:grid;
+  grid-template-columns:repeat(3,25px);
+  grid-template-rows:repeat(3,19px);
+  gap:1px;
+  padding-right:10px;
+  border-right:1px solid #29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-directions button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-zoom button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preset{
+  color:#55c5f5;
+  background:#122d4e;
+  border:1px solid #31577b;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-directions button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-zoom button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preset:hover{
+  color:#fff;
+  background:#17446f;
+  border-color:#168fd0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-directions button{
+  width:25px;
+  height:19px;
+  padding:0;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-zoom{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding-right:10px;
+  white-space:nowrap;
+  border-right:1px solid #29486e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-zoom button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preset{
+  height:32px;
+  padding:0 7px;
+  font-size:10px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-backdrop{
+  position:fixed;
+  z-index:190;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:rgba(1,9,21,.76);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog{
+  width:min(860px,calc(100vw - 40px));
+  max-height:calc(100vh - 40px);
+  display:grid;
+  grid-template-rows:58px minmax(0,1fr) 58px;
+  overflow:hidden;
+  color:#b9cce3;
+  background:#0d2340;
+  border:1px solid #31557d;
+  box-shadow:0 24px 70px rgba(0,7,17,.48);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  background:#132d52;
+  border-bottom:1px solid #315075;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header>div{display:flex;align-items:center;gap:10px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header>div>span{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  color:#48c5fb;
+  background:#123c65;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header b{display:block;color:#d6e5f5;font-size:15px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header small{display:block;margin-top:3px;color:#7592b4;font-size:10px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>header>button{color:#88a8c8;background:transparent;border:0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-body{min-height:0;overflow:auto;scrollbar-color:#0c6d9f #0d2340}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section{
+  padding:14px 18px 16px;
+  border-bottom:1px solid #29476a;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header{
+  min-height:30px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:11px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header>i{
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  background:#0a99df;
+  border-radius:50%;
+  font-size:11px;
+  font-style:normal;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header>div{min-width:0;flex:1}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header b{color:#cbdced;font-size:13px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header b>em{color:#ff6275;font-style:normal}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header small{display:block;margin-top:2px;color:#7895b6;font-size:10px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-section>header>strong{color:#3cc2fa;font-size:11px;font-weight:500}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form label{position:relative;display:grid;gap:6px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form label>span{color:#95acc7;font-size:11px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form label>span b{color:#ff6275}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form input,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-preset input,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-preset select{
+  height:34px;
+  padding:0 10px;
+  color:#c6d8eb;
+  background:#091e38;
+  border:1px solid #355377;
+  outline:0;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form input:focus,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-preset select:focus{border-color:#13a8ed}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-form label>small{position:absolute;right:7px;bottom:7px;color:#5e7d9f;font-size:9px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-error{display:flex;align-items:center;gap:5px;margin:8px 0 0;color:#ff7182;font-size:10px}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context{
+  display:grid;
+  grid-template-columns:36px minmax(180px,.65fr) 1.35fr;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  background:#102946;
+  border:1px solid #29496f;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context>span{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  color:#45c3f8;
+  background:#123b65;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context>div b{display:block;color:#ccdded}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context>div small{display:block;margin-top:3px;color:#7390b1;font-size:10px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context dl{display:grid;grid-template-columns:repeat(3,1fr);margin:0}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context dl div{padding:0 9px;border-left:1px solid #2c4b6f}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context dt{color:#6f8cad;font-size:9px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-camera-context dd{margin:4px 0 0;color:#b8cce2;font-size:10px}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-preset{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+  margin-top:9px;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-preset>span{display:flex;align-items:center;gap:5px;color:#8fa7c3}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics>button{
+  min-height:58px;
+  display:grid;
+  grid-template-columns:22px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  color:#a9bfd7;
+  background:#0b203b;
+  border:1px solid #2d4b6f;
+  text-align:left;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics>button:hover{background:#102c4c;border-color:#2975a5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics>button.selected{background:#12375d;border-color:#14a8eb}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics>button>span{
+  width:18px;
+  height:18px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  border:1px solid #4a6687;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics>button.selected>span{background:#0aa7f5;border-color:#0aa7f5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics b{display:block;color:#c6d7e9;font-size:11px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics small{display:block;margin-top:4px;color:#6885a6;font-size:9px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-native-metrics em{color:#5ebee9;font-size:9px;font-style:normal;white-space:nowrap}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:0 16px;
+  background:#102847;
+  border-top:1px solid #315075;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer>div{min-width:0;display:flex;align-items:center;gap:6px;flex:1;color:#d4a353;font-size:10px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer>div.ready{color:#45d5a2}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer>button{
+  height:32px;
+  padding:0 15px;
+  color:#a9bfd6;
+  background:#193858;
+  border:1px solid #315173;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer>button.primary{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  color:#fff;
+  background:#0aa7f5;
+  border-color:#0aa7f5;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-point-create-dialog>footer>button:disabled{opacity:.42;cursor:not-allowed}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-device-actions{display:grid;gap:5px}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-device-actions button{height:26px;white-space:nowrap}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-test{
+  color:#7f9bbd;
+  background:#102843;
+  border:1px solid #315173;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-test:hover{color:#4cc6f9;border-color:#178dcc}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-test.verified{color:#48d2a0;border-color:#247e6a}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-unified-test:disabled{opacity:.5;cursor:not-allowed}
+
+@media(max-width:1240px){
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-strip{
+    grid-template-columns:minmax(170px,1fr) auto auto;
+    grid-template-rows:auto auto;
+  }
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-ptz-status{grid-column:1/-1;padding:0 0 5px;border-right:0;border-bottom:1px solid #29486e}
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.annotation-mode .rh-preset{grid-column:3}
+}
+
+/* 采集站管理统一主题：设备接入、状态监控和交付检查沿用同一深蓝工业色板。 */
+:is(.stations-shell, #root:has(> .rh-page)) .rh-main.access-mode{
+  grid-template-rows:54px minmax(0,1fr);
+  padding:0 10px 10px;
+  color:var(--station-text);
+  background:var(--station-bg);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-workbench.tree-hidden.access-mode{
+  grid-template-columns:minmax(0,1fr);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-workbench.access-mode .rh-main{
+  grid-column:1;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-page-heading,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-view-tabs{
+  color:var(--station-text);
+  background:var(--station-panel);
+  border-color:var(--station-line);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-copy strong,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-single-view-title strong{
+  color:#dceaff;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-copy span,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-station-select,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-single-view-title small{
+  color:var(--station-muted);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-station-select select,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-actions button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-version{
+  color:#b8cce2;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+  color-scheme:dark;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-version small{color:#6f8dad}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-version.dirty{
+  color:var(--station-amber);
+  background:#342a1e;
+  border-color:#745e36;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-actions button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-actions button:focus-visible{
+  color:#63d0ff;
+  background:#12375d;
+  border-color:#188fca;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-access-heading-actions button.primary,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary>button.next{
+  color:#fff;
+  background:var(--station-cyan);
+  border-color:var(--station-cyan);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery{
+  color:var(--station-text);
+  background:var(--station-bg);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-view-tabs>button{color:#8ba6c5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-view-tabs>button:hover{color:#d4e8fb}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-view-tabs>button.active{
+  color:#36c1ff;
+  border-bottom-color:var(--station-cyan);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-score{
+  color:#a9bfd8;
+  border-right-color:var(--station-line);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-score strong{color:#d5e5f6}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-score small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-reasons small{color:#7894b5}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-reasons i,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-reasons button{
+  color:#ff8290;
+  background:#331f32;
+  border-color:#754054;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary.ready .rh-hik-delivery-reasons i{
+  color:#51dda9;
+  background:#123c3b;
+  border-color:#276b5c;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary>button.refresh,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary>button.review{
+  color:#91abc8;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary>button.refresh:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-delivery-summary>button.review:hover{
+  color:#51c9fb;
+  background:#12365b;
+  border-color:#188fca;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org{
+  color:var(--station-text);
+  background:#081c35;
+  border-color:var(--station-line);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org>header,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org>footer{
+  background:var(--station-panel-2);
+  border-color:var(--station-line);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org>header small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-tree button small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node small{color:#6f8cac}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search input{
+  color:#c5d7e9;
+  background:var(--station-control);
+  border-color:var(--station-border);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search input::placeholder{color:#6885a5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search input:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search input:focus{border-color:#168fd1}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search>svg,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-search button{color:#7896b7}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-tree>button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-area-row,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-tree .rh-hik-device-node{
+  color:#a9bfd8;
+  background:transparent;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-tree button:hover{background:#102c4d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org-tree>button.selected,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-area-row.selected,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node.current{
+  color:#55cbff;
+  background:#12375e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node b{color:#3bc3ff}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node{
+  color:#9eb8d3!important;
+  background:#0f2948!important;
+  border-color:#294c72!important;
+  box-shadow:inset 2px 0 0 #287cad!important;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node:hover{
+  color:#d4e7f8!important;
+  background:#143659!important;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-area-select.selected{
+  color:#4bc8ff;
+  background:#12375d;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node>svg{color:#6987a8}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node.current>svg{color:var(--station-cyan)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node::before,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node::before,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-station-node::after,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-node::after{border-color:#294a70}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org>footer button{
+  color:#7894b5;
+  background:transparent;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-org>footer button.active{
+  color:#43c5ff;
+  background:#12375d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-device-list{
+  color:var(--station-text);
+  background:var(--station-surface);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-toolbar,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-filters,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-pagination{
+  color:#90a9c6;
+  background:var(--station-panel-2);
+  border-color:var(--station-line);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-toolbar button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-health-actions button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-empty button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-pagination select,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-pagination button{
+  color:#a4bbd3;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-toolbar button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-health-actions button:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-empty button:hover{
+  color:#4bc8ff;
+  background:#12375d;
+  border-color:#188fca;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-toolbar button.primary{
+  color:#fff;
+  background:var(--station-cyan);
+  border-color:var(--station-cyan);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-more{
+  color:var(--station-text);
+  background:#102a49;
+  border-color:#315274;
+  box-shadow:0 12px 28px rgba(0,8,22,.38);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-more>button{color:#a9bfd8;background:transparent}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-list-more>button:hover{color:#52caff;background:#15375b}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-scope-note,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-monitor-copy{color:#7895b6}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-scope-note b{color:#b8cce2}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-selection,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-ptz-link,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-alg-open{color:#35bfff}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-filters select,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-filters input{
+  color:#bfd1e4;
+  background:var(--station-control);
+  border-color:var(--station-border);
+  color-scheme:dark;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-filters .search svg{color:#6f8dad}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table{color:#a9bfd8;background:var(--station-surface)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table th{
+  color:#7896b7;
+  background:#0d2747;
+  border-color:var(--station-line);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table td{border-color:#203e63}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table tr:hover{background:#102d4d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table tr.selected{background:#15375d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table td:nth-child(2) b{color:#c5d7e9}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table td:nth-child(2) small{color:#718eaf}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table .rh-checkbox{border-color:#496684;background:#0a1f39}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-table .rh-checkbox.checked{background:var(--station-cyan);border-color:var(--station-cyan)}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-type{
+  color:#66cbff;
+  background:#12375d;
+  border-color:#276996;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-type.thermal{
+  color:#ffb16f;
+  background:#3a2a22;
+  border-color:#78543d;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-type.ptz{
+  color:#74c9ff;
+  background:#153553;
+  border-color:#326b97;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-status.online{color:#4dd9a5;background:#123c3a}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-status.offline{color:#9ab0c7;background:#24374d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-status.alarm{color:#ff7a88;background:#3b2131}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-alg-tags span{
+  color:#51d7aa;
+  background:#123b3c;
+  border-color:#28685c;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-alg-tags span.more{
+  color:#62c9ff;
+  background:#12375d;
+  border-color:#2d6d98;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-health-result>small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-readiness small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-empty span{color:#7894b5}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-readiness>em.blocked{
+  color:#ff7d89;
+  background:#3a2130;
+  border-color:#754052;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-readiness>em.ready{
+  color:#4dd9a5;
+  background:#123c3a;
+  border-color:#286b5e;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-pagination button.active{
+  color:#55caff;
+  border-color:var(--station-cyan);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-restore{
+  color:var(--station-text);
+  background:var(--station-panel-2);
+  border-color:var(--station-line);
+  box-shadow:-8px 0 24px rgba(0,8,22,.26);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-restore:hover,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-restore:focus-visible{
+  color:#58caff;
+  background:#12375d;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>header,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>nav,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>footer{
+  background:var(--station-panel);
+  border-color:var(--station-line);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>header b{color:#d4e5f6}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>header>div span{
+  color:var(--station-amber);
+  background:#342b20;
+  border-color:#725d37;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>header button{color:#86a3c2}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>nav button{color:#8ea8c5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>nav button.active{color:#43c5ff;border-color:var(--station-cyan)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-body{background:#0b203b}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-body section{
+  background:#0f2847;
+  border-color:#29496e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer-body h4{color:#c8d9eb}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form label{color:#91aac5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form input,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form select{
+  color:#c5d7e9;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+  color-scheme:dark;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form label.invalid input{background:#321f2c;border-color:#df5969}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form .rh-hik-station-owner input[readonly]{
+  color:#75ccfa;
+  background:#102e4f;
+  border-color:#2d638a;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form .rh-hik-station-owner small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-save-hint{color:#718ead}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-form .password button{color:#7896b7}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-integration-status h4 button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-control-actions button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-live-annotation-jump,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>footer button{
+  color:#80cfff;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-integration-status>div{color:#8fa8c4}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-integration-status>div b{color:#c1d3e6}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-integration-status>div em{color:#4ed9a5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-drawer>footer button.primary{
+  color:#fff;
+  background:var(--station-cyan);
+  border-color:var(--station-cyan);
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-control-capability{
+  color:#66cbff;
+  background:#113253;
+  border-color:#2c628d;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-control-capability span{color:#8aa5c2}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-control-capability.disabled{
+  color:#7992ad;
+  background:#1a2c42;
+  border-color:#354b65;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-tab{
+  color:var(--station-text);
+  background:#0b203b;
+  border-color:var(--station-line);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-head,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-summary,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-toolbar{
+  background:#0f2847;
+  border-color:#29496e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-head p,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-summary span small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-time,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-toolbar>small{color:#7894b5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-summary>span{border-color:#29496e}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-summary b{color:#d2e3f4}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-head>span{
+  color:#4ed9a5;
+  background:#123c3a;
+  border-color:#286b5e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-head>span.blocked,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-actions>span.blocked{
+  color:var(--station-amber);
+  background:#342b20;
+  border-color:#725d37;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-toolbar input,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-toolbar select{
+  color:#bfd1e4;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+  color-scheme:dark;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-list article{border-color:#203e63}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-icon{color:#5acbff;background:#12375d}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-list article.bound .rh-hik-metric-icon{color:#4dd9a5;background:#123c3a}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-copy b{color:#c8daec}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-copy code,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-copy>small{color:#748fad}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-note{
+  color:#91aac5;
+  background:#102d4c;
+  border-color:#2b4c70;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-note.blocked{
+  color:#ddb46f;
+  background:#34291e;
+  border-color:#6f5835;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-primary{
+  color:#fff;
+  background:var(--station-cyan);
+  border-color:var(--station-cyan);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-primary:disabled,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-actions>button:disabled,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-hik-metric-summary>button:disabled{
+  color:#66829f;
+  background:#1b3047;
+  border-color:#354c66;
+}
+
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review-backdrop{background:rgba(2,10,24,.72)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review{
+  color:var(--station-text);
+  background:#0b203b;
+  border-color:#315274;
+  box-shadow:0 24px 70px rgba(0,6,18,.58);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>header,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>footer{background:var(--station-panel);border-color:var(--station-line)}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>header b{color:#d3e4f5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>header small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>header button{color:#7d9aba}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-decision{
+  background:#123c3a;
+  border-color:#286b5e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-decision.blocked{background:#3a242b;border-color:#754456}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-decision b,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-decision>strong{color:#d3e4f5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-decision span{color:#8ba6c4}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review-body section{background:#0d2543;border-color:#29496e}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review-body h4{
+  color:#c4d6e9;
+  background:#102b4b;
+  border-color:#29496e;
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-gates>div,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-blockers article{border-color:#203e63}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-gates small,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-blockers article small{color:#7894b5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-gates em{color:#91aac5}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-blockers article button,
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>footer button{
+  color:#79cfff;
+  background:var(--station-control);
+  border-color:var(--station-border-strong);
+}
+:is(.stations-shell, #root:has(> .rh-page)) .rh-delivery-review>footer button.primary{
+  color:#fff;
+  background:var(--station-cyan);
+  border-color:var(--station-cyan);
+}
+
+@media(max-width:1450px){
+  :is(.stations-shell, #root:has(> .rh-page)) .rh-main.access-mode{
+    grid-template-rows:44px minmax(0,1fr);
+    padding:0 8px 8px;
+  }
+}
