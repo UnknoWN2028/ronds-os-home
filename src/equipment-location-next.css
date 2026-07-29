@@ -428,8 +428,8 @@
   height: 100%;
   display: block;
   object-fit: contain;
-  opacity: .96;
-  filter: saturate(1.08) contrast(1.05);
+  opacity: .82;
+  filter: saturate(.86) contrast(.98) brightness(.92);
 }
 .eln-space-empty {
   width: min(520px, calc(100% - 40px));
@@ -453,9 +453,9 @@
 .eln-region.active { border-style: solid; background: color-mix(in srgb, var(--region) 12%, transparent); box-shadow: 0 0 16px color-mix(in srgb, var(--region) 26%, transparent), inset 0 0 22px color-mix(in srgb, var(--region) 10%, transparent); }
 .eln-region b { position: absolute; top: -23px; left: -1px; padding: 2px 7px; border: 1px solid currentColor; color: #dff6ff; background: #073052; font-size: 10px; white-space: nowrap; }
 .eln-region.editing { z-index: 5; border-style: solid; }
-.eln-marker { position: absolute; z-index: 4; min-width: 55px; height: 25px; display: flex; align-items: center; gap: 3px; padding: 2px 6px 2px 2px; border: 1px solid color-mix(in srgb, var(--state) 72%, #0c3453); color: #dff7ff; background: #082c4a; box-shadow: 0 0 12px color-mix(in srgb, var(--state) 35%, transparent); transform: translate(-50%, -50%); cursor: pointer; }
+.eln-marker { position: absolute; z-index: 4; min-width: 62px; height: 27px; display: flex; align-items: center; gap: 4px; padding: 2px 7px 2px 2px; border: 1px solid color-mix(in srgb, var(--state) 78%, #0c3453); color: #effaff; background: rgba(4, 35, 58, .97); box-shadow: 0 0 15px color-mix(in srgb, var(--state) 42%, transparent); transform: translate(-50%, -50%); cursor: pointer; }
 .eln-marker > span { width: 20px; height: 19px; display: grid; place-items: center; color: #031323; background: var(--state); }
-.eln-marker b { font-size: 9px; letter-spacing: .03em; }
+.eln-marker b { font-size: 10px; font-weight: 600; letter-spacing: .02em; }
 .eln-marker.selected { z-index: 5; border-color: #f5fbff; box-shadow: 0 0 0 2px rgba(30, 201, 255, .25), 0 0 20px var(--state); transform: translate(-50%, -50%) scale(1.08); }
 .eln-map-viewport.position-edit .eln-marker { z-index: 9; }
 .eln-map-viewport.position-edit .eln-marker.selected { z-index: 10; }

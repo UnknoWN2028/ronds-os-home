@@ -37,13 +37,13 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react/dist/cjs/tabler-icons-react.cjs";
-import boilerRoomPlan from "./assets/equipment-space-boiler-room-v3.png";
-import conveyorCorridorPlan from "./assets/equipment-space-conveyor-corridor-v1.png";
-import transferStationPlan from "./assets/equipment-space-transfer-station-v1.png";
-import crusherHousePlan from "./assets/equipment-space-crusher-house-v1.png";
-import turbineHallPlan from "./assets/equipment-space-turbine-hall-v1.png";
-import absorberRoomPlan from "./assets/equipment-space-absorber-room-v1.png";
-import electricalRoomPlan from "./assets/equipment-space-electrical-room-v1.png";
+import boilerRoomPlan from "./assets/equipment-space-boiler-room-v4.png";
+import conveyorCorridorPlan from "./assets/equipment-space-conveyor-corridor-v2.png";
+import transferStationPlan from "./assets/equipment-space-transfer-station-v2.png";
+import crusherHousePlan from "./assets/equipment-space-crusher-house-v2.png";
+import turbineHallPlan from "./assets/equipment-space-turbine-hall-v2.png";
+import absorberRoomPlan from "./assets/equipment-space-absorber-room-v2.png";
+import electricalRoomPlan from "./assets/equipment-space-electrical-room-v2.png";
 import boilerCctvPreview from "./assets/equipment-location-boiler-cctv-v1.png";
 import corridorCctvPreview from "./assets/monitor-belt-misalignment.png";
 import intrusionEvidence from "./assets/monitor-east-entrance-intrusion.png";
