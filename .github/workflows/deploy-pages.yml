@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: npm run build -- --base /ronds-os-home/
 
+      - name: Add PRD review package
+        run: node scripts/prepare-prd-pages.mjs
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
