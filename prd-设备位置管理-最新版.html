@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>5.1 设备管理—设备位置管理｜PRD 阅读版</title>
+  <style>
+    :root {
+      --navy-950: #07182a;
+      --navy-900: #0b2037;
+      --navy-800: #10304f;
+      --blue-700: #155eef;
+      --blue-600: #2672ff;
+      --cyan-500: #15a7c7;
+      --ink-900: #17212f;
+      --ink-700: #344054;
+      --ink-600: #475467;
+      --ink-500: #667085;
+      --line: #dfe6ee;
+      --line-soft: #e9eef4;
+      --paper: #ffffff;
+      --canvas: #f2f5f9;
+      --important-bg: #eef5ff;
+      --important-line: #3578e5;
+      --caution-bg: #fff8e7;
+      --caution-line: #d98d12;
+      --shadow: 0 14px 40px rgba(11, 32, 55, 0.08);
+      --sidebar-width: 292px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 84px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink-900);
+      background:
+        radial-gradient(circle at 72% -10%, rgba(38, 114, 255, 0.08), transparent 30rem),
+        var(--canvas);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.78;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: var(--blue-700);
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 12px;
+      left: 12px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--blue-700);
+      transform: translateY(-160%);
+      transition: transform 0.18s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .reading-progress {
+      position: fixed;
+      z-index: 80;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan-500), var(--blue-600));
+      box-shadow: 0 0 12px rgba(38, 114, 255, 0.55);
+    }
+
+    .sidebar {
+      position: fixed;
+      z-index: 40;
+      inset: 0 auto 0 0;
+      width: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      color: #eaf2fb;
+      background:
+        linear-gradient(160deg, rgba(21, 167, 199, 0.11), transparent 34%),
+        linear-gradient(180deg, var(--navy-900), var(--navy-950));
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-height: 82px;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid rgba(82, 205, 232, 0.48);
+      border-radius: 12px;
+      color: #c4f6ff;
+      background: rgba(21, 167, 199, 0.14);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .brand-copy span {
+      margin-top: 2px;
+      color: #8fa8c1;
+      font-size: 12px;
+    }
+
+    .toc-label {
+      padding: 22px 22px 8px;
+      color: #7590aa;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    .toc {
+      min-height: 0;
+      padding: 0 12px 22px;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #38546e transparent;
+    }
+
+    .toc-link {
+      position: relative;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 4px;
+      align-items: baseline;
+      margin: 2px 0;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: #aebfd0;
+      text-decoration: none;
+      transition: color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+    }
+
+    .toc-link::before {
+      position: absolute;
+      top: 9px;
+      bottom: 9px;
+      left: 0;
+      width: 2px;
+      border-radius: 999px;
+      background: transparent;
+      content: "";
+    }
+
+    .toc-link span {
+      color: #6f8ca7;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toc-link strong {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .toc-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(2px);
+    }
+
+    .toc-link.active {
+      color: #fff;
+      background: rgba(38, 114, 255, 0.2);
+    }
+
+    .toc-link.active::before {
+      background: #4fd7ed;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #718aa3;
+      font-size: 11px;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      margin-left: var(--sidebar-width);
+    }
+
+    .toolbar {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      display: flex;
+      min-height: 58px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid rgba(210, 219, 229, 0.9);
+      background: rgba(247, 249, 252, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .toolbar-title {
+      min-width: 0;
+      color: var(--ink-600);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tool-button {
+      display: inline-flex;
+      min-height: 36px;
+      gap: 7px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 13px;
+      border: 1px solid #d5dee8;
+      border-radius: 9px;
+      color: var(--ink-700);
+      background: #fff;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+    }
+
+    .tool-button:hover {
+      border-color: #9ab6d8;
+      box-shadow: 0 5px 14px rgba(11, 32, 55, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .tool-button:focus-visible,
+    .toc-link:focus-visible,
+    .back-to-top:focus-visible {
+      outline: 3px solid rgba(38, 114, 255, 0.3);
+      outline-offset: 2px;
+    }
+
+    .menu-button {
+      display: none;
+    }
+
+    .content {
+      width: min(1060px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .hero {
+      position: relative;
+      padding: clamp(30px, 5vw, 54px);
+      overflow: hidden;
+      border: 1px solid #dbe4ee;
+      border-radius: 18px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 88% 15%, rgba(78, 214, 238, 0.2), transparent 16rem),
+        linear-gradient(135deg, #0b2037, #123b63 72%, #155677);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      position: absolute;
+      right: -74px;
+      bottom: -110px;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 40px rgba(255, 255, 255, 0.025),
+        0 0 0 90px rgba(255, 255, 255, 0.018);
+      content: "";
+    }
+
+    .hero-kicker {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border: 1px solid rgba(116, 222, 241, 0.35);
+      border-radius: 999px;
+      color: #baf1fa;
+      background: rgba(21, 167, 199, 0.12);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 18px 0 12px;
+      color: #fff;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.28;
+      letter-spacing: -0.025em;
+    }
+
+    .hero-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      color: #a9c4db;
+      font-size: 13px;
+    }
+
+    .hero-meta span + span::before {
+      margin-right: 14px;
+      color: #5f7f9c;
+      content: "／";
+    }
+
+    .doc-section {
+      margin-top: 20px;
+      padding: clamp(24px, 4vw, 38px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+      box-shadow: 0 8px 26px rgba(11, 32, 55, 0.05);
+    }
+
+    .doc-section:target {
+      border-color: rgba(38, 114, 255, 0.5);
+      box-shadow: 0 0 0 4px rgba(38, 114, 255, 0.08), var(--shadow);
+    }
+
+    .section-heading {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .section-number {
+      display: inline-flex;
+      min-width: 72px;
+      min-height: 30px;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 9px;
+      border-radius: 8px;
+      color: #1553bd;
+      background: #eaf2ff;
+      font-size: 12px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: #15283e;
+      font-size: clamp(20px, 2.5vw, 25px);
+      line-height: 1.35;
+    }
+
+    .doc-section > p {
+      margin: 15px 0;
+      color: var(--ink-700);
+    }
+
+    .prd-figure {
+      margin: 26px 0 6px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #f7faff;
+      box-shadow: 0 8px 24px rgba(11, 32, 55, 0.06);
+    }
+
+    .prd-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 8px;
+      background: #06182f;
+    }
+
+    .prd-figure--narrow img {
+      width: min(320px, 100%);
+    }
+
+    .prd-figure figcaption {
+      margin-top: 11px;
+      color: var(--ink-500);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .rule-heading {
+      position: relative;
+      margin: 28px 0 12px;
+      padding-left: 13px;
+      color: #213b59;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .rule-heading::before {
+      position: absolute;
+      top: 0.28em;
+      bottom: 0.28em;
+      left: 0;
+      width: 3px;
+      border-radius: 3px;
+      background: linear-gradient(var(--cyan-500), var(--blue-600));
+      content: "";
+    }
+
+    .rule-list,
+    .step-list {
+      margin: 13px 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rule-list li,
+    .step-list li {
+      position: relative;
+      margin: 8px 0;
+      padding: 2px 0 2px 24px;
+      color: var(--ink-700);
+    }
+
+    .rule-list li::before {
+      position: absolute;
+      top: 0.72em;
+      left: 4px;
+      width: 7px;
+      height: 7px;
+      border: 2px solid #4c83d7;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .step-list {
+      counter-reset: steps;
+    }
+
+    .step-list li {
+      min-height: 29px;
+      padding-left: 40px;
+      counter-increment: steps;
+    }
+
+    .step-list li::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border-radius: 8px;
+      color: #1553bd;
+      background: #eaf2ff;
+      content: counter(steps);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      margin: 20px 0;
+      padding: 17px 18px;
+      border: 1px solid;
+      border-left-width: 4px;
+      border-radius: 11px;
+    }
+
+    .callout p {
+      margin: 1px 0 0;
+      color: #263a52;
+      font-weight: 650;
+    }
+
+    .callout-icon {
+      display: grid;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .callout-important {
+      border-color: #b9d3f8;
+      border-left-color: var(--important-line);
+      background: var(--important-bg);
+    }
+
+    .callout-important .callout-icon {
+      background: var(--important-line);
+    }
+
+    .callout-caution {
+      border-color: #efd99e;
+      border-left-color: var(--caution-line);
+      background: var(--caution-bg);
+    }
+
+    .callout-caution .callout-icon {
+      background: var(--caution-line);
+    }
+
+    .table-wrap {
+      width: 100%;
+      margin: 20px 0 24px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      outline: none;
+    }
+
+    .table-wrap:focus-visible {
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 3px rgba(38, 114, 255, 0.12);
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: separate;
+      border-spacing: 0;
+      color: var(--ink-700);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      border-right: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr > :last-child {
+      border-right: 0;
+    }
+
+    tbody tr:last-child > * {
+      border-bottom: 0;
+    }
+
+    thead th {
+      color: #29425e;
+      background: #f4f7fb;
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    tbody th {
+      width: 178px;
+      color: #213a57;
+      background: #fbfcfe;
+      font-weight: 650;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #fcfdff;
+    }
+
+    tbody tr:hover > * {
+      background: #f6faff;
+    }
+
+    .relationship-map {
+      position: relative;
+      margin: 20px 0 24px;
+      padding: 22px 24px;
+      overflow-x: auto;
+      border: 1px solid #234765;
+      border-radius: 12px;
+      color: #d8f6ff;
+      background:
+        linear-gradient(135deg, rgba(21, 167, 199, 0.09), transparent 58%),
+        #0b2037;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .relationship-map code {
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.75;
+      white-space: pre;
+    }
+
+    .back-to-top {
+      position: fixed;
+      z-index: 25;
+      right: 24px;
+      bottom: 24px;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--navy-800);
+      box-shadow: 0 8px 24px rgba(11, 32, 55, 0.24);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      :root {
+        --sidebar-width: min(320px, 84vw);
+      }
+
+      .sidebar {
+        transform: translateX(-102%);
+        transition: transform 0.2s ease;
+      }
+
+      body.nav-open .sidebar {
+        transform: translateX(0);
+        box-shadow: 18px 0 48px rgba(4, 18, 33, 0.28);
+      }
+
+      .nav-overlay {
+        position: fixed;
+        z-index: 35;
+        inset: 0;
+        display: block;
+        border: 0;
+        background: rgba(3, 15, 28, 0.42);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      body.nav-open .nav-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .page-shell {
+        margin-left: 0;
+      }
+
+      .menu-button {
+        display: inline-flex;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        font-size: 14px;
+      }
+
+      .toolbar {
+        padding: 8px 12px;
+      }
+
+      .toolbar-title {
+        display: none;
+      }
+
+      .content {
+        width: min(100% - 22px, 1060px);
+        padding-top: 18px;
+      }
+
+      .hero,
+      .doc-section {
+        border-radius: 13px;
+      }
+
+      .hero {
+        padding: 26px 22px;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .hero-meta {
+        display: block;
+      }
+
+      .hero-meta span {
+        display: block;
+      }
+
+      .hero-meta span + span::before {
+        display: none;
+      }
+
+      .doc-section {
+        margin-top: 12px;
+        padding: 22px 18px;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+      }
+
+      .section-number {
+        min-width: 64px;
+      }
+
+      .section-heading h2 {
+        font-size: 20px;
+      }
+
+      .callout {
+        grid-template-columns: 25px minmax(0, 1fr);
+        padding: 14px;
+      }
+
+      .back-to-top {
+        right: 14px;
+        bottom: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 16mm 14mm;
+      }
+
+      body {
+        color: #111827;
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .reading-progress,
+      .sidebar,
+      .toolbar,
+      .back-to-top,
+      .nav-overlay {
+        display: none !important;
+      }
+
+      .page-shell {
+        margin: 0;
+      }
+
+      .content {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .hero {
+        margin: 0 0 10mm;
+        padding: 12mm;
+        border: 1px solid #b7c4d2;
+        border-radius: 0;
+        color: #111827;
+        background: #fff;
+        box-shadow: none;
+        break-after: avoid;
+      }
+
+      .hero h1,
+      .hero-kicker,
+      .hero-meta {
+        color: #111827;
+      }
+
+      .hero-kicker {
+        border-color: #9ca3af;
+        background: #fff;
+      }
+
+      .hero::after {
+        display: none;
+      }
+
+      .doc-section {
+        margin: 0;
+        padding: 8mm 0;
+        border: 0;
+        border-top: 1px solid #cbd5e1;
+        border-radius: 0;
+        box-shadow: none;
+        break-before: auto;
+      }
+
+      .section-heading,
+      .rule-heading,
+      .callout,
+      .prd-figure,
+      .relationship-map,
+      table,
+      tr {
+        break-inside: avoid;
+      }
+
+      .relationship-map {
+        color: #111827;
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+
+      .table-wrap {
+        overflow: visible;
+      }
+
+      table {
+        min-width: 0;
+        font-size: 8.6pt;
+      }
+
+      th,
+      td {
+        padding: 6px 8px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="prd-assets/prd-annotations.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="章节目录">
+    <div class="brand">
+      <div class="brand-mark">PRD</div>
+      <div class="brand-copy">
+        <strong>具体设计</strong>
+        <span>设备位置管理</span>
+      </div>
+    </div>
+    <div class="toc-label">本章目录</div>
+    <nav class="toc">
+      <a class="toc-link" href="#511-功能定位"><span>5.1.1</span><strong>功能定位</strong></a>
+<a class="toc-link" href="#512-使用对象与权限"><span>5.1.2</span><strong>使用对象与权限</strong></a>
+<a class="toc-link" href="#513-页面结构"><span>5.1.3</span><strong>页面结构</strong></a>
+<a class="toc-link" href="#514-数据来源与对象关系"><span>5.1.4</span><strong>数据来源与对象关系</strong></a>
+<a class="toc-link" href="#515-设备空间树维护"><span>5.1.5</span><strong>设备空间树维护</strong></a>
+<a class="toc-link" href="#516-平面图配置"><span>5.1.6</span><strong>平面图配置</strong></a>
+<a class="toc-link" href="#517-测点同步落位与自动分组"><span>5.1.7</span><strong>测点同步、落位与自动分组</strong></a>
+<a class="toc-link" href="#518-测点位置编辑"><span>5.1.8</span><strong>测点位置编辑</strong></a>
+<a class="toc-link" href="#519-图面标记"><span>5.1.9</span><strong>图面标记</strong></a>
+<a class="toc-link" href="#5110-本期不做"><span>5.1.10</span><strong>本期不做</strong></a>
+<a class="toc-link" href="#5111-核心验收用例"><span>5.1.11</span><strong>核心验收用例</strong></a>
+    </nav>
+    <div class="sidebar-footer">内容与 Markdown 原文一致</div>
+  </aside>
+
+  <button class="nav-overlay" id="nav-overlay" type="button" aria-label="关闭目录"></button>
+
+  <div class="page-shell">
+    <header class="toolbar">
+      <div class="toolbar-title">5.1 设备管理—设备位置管理</div>
+      <div class="toolbar-actions">
+        <button class="tool-button menu-button" id="menu-button" type="button" aria-controls="sidebar" aria-expanded="false">
+          <span aria-hidden="true">☰</span>
+          <span>目录</span>
+        </button>
+        <button class="tool-button" id="print-button" type="button">
+          <span aria-hidden="true">⇩</span>
+          <span>打印 / 导出 PDF</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="main-content">
+      <header class="hero" id="top">
+        <span class="hero-kicker">PRD · 具体设计</span>
+        <h1>5.1 设备管理—设备位置管理</h1>
+        <div class="hero-meta">
+          <span>设备管理</span>
+          <span>设备位置管理</span>
+        </div>
+      </header>
+
+      <section class="doc-section" id="511-功能定位" data-section="5.1.1 功能定位">
+<header class="section-heading">
+<span class="section-number">5.1.1</span>
+<h2>功能定位</h2>
+</header>
+<p>本功能是在现有设备管理能力上的增量建设，复用【51018】设备环境树及既有音视频测点目录，为项目交付人员提供火电厂巡检设备空间搭建、平面图配置和测点落位能力。</p>
+<div class="table-wrap" role="region" aria-label="类型、具体内容" tabindex="0">
+<table>
+<thead><tr><th scope="col">类型</th><th scope="col">具体内容</th></tr></thead>
+<tbody>
+<tr><th scope="row">复用能力</th><td>【51018】设备环境树结构、节点标识、层级关系、排序及权限；采集站管理中的摄像机、取景来源、测点和算法目录</td></tr>
+<tr><th scope="row">本期改造</th><td>左侧设备树的数据范围和内容；中央平面图的底图上传、测点标记、自动分组及位置编辑</td></tr>
+<tr><th scope="row">原样保留</th><td>除设备树和中央平面图以外的全部原有页面结构、布局、页签、详情、功能入口和交互</td></tr>
+<tr><th scope="row">本期不调整</th><td>设备接入、预置位配置、算法绑定、巡检路线、执行顺序、停留时长和任务调度</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="doc-section" id="512-使用对象与权限" data-section="5.1.2 使用对象与权限">
+<header class="section-heading">
+<span class="section-number">5.1.2</span>
+<h2>使用对象与权限</h2>
+</header>
+<p>主要使用对象为项目交付人员。</p>
+<p>项目交付人员可执行：</p>
+<ul class="rule-list"><li>搭建和维护巡检设备空间树。</li><li>上传、替换设备空间平面图。</li><li>同步已有音视频算法测点。</li><li>执行自动分组。</li><li>放置、移动、清除测点位置。</li><li>检查并保存设备位置配置。</li></ul>
+<p>普通运维及管理人员默认仅可查看设备空间图、测点状态、实时结果和巡检区域详情。</p>
+<p>删除设备空间时，若空间下存在子空间、平面图或测点位置关系，系统应阻止删除并说明依赖项。</p>
+</section>
+<section class="doc-section" id="513-页面结构" data-section="5.1.3 页面结构">
+<header class="section-heading">
+<span class="section-number">5.1.3</span>
+<h2>页面结构</h2>
+</header>
+<aside class="callout callout-important">
+<span class="callout-icon" aria-hidden="true">i</span>
+<p>设备位置管理沿用原页面结构。本期只改造左侧设备树和中央平面图，其他区域均不做更改。</p>
+</aside>
+<div class="table-wrap" role="region" aria-label="页面区域、本期处理方式" tabindex="0">
+<table>
+<thead><tr><th scope="col">页面区域</th><th scope="col">本期处理方式</th></tr></thead>
+<tbody>
+<tr><th scope="row">左侧设备树</th><td>调整为仅展示火电厂业务范围内的音视频巡检设备、测点及必要祖先节点</td></tr>
+<tr><th scope="row">中央平面图</th><td>增加独立底图上传、音视频测点标记、自动分组和位置编辑</td></tr>
+<tr><th scope="row">页面顶部</th><td>完全沿用原页面，不新增、不删除、不调整</td></tr>
+<tr><th scope="row">原有页签及导航</th><td>完全沿用原页面，名称、数量、顺序和切换方式均不调整</td></tr>
+<tr><th scope="row">原有测点详情</th><td>完全沿用原页面，布局、字段、按钮和打开方式均不调整</td></tr>
+<tr><th scope="row">原有右侧功能区</th><td>完全沿用原页面，入口、顺序、布局和折叠方式均不调整</td></tr>
+<tr><th scope="row">其他弹窗、提示及操作区</th><td>完全沿用原页面，不因本次功能新增而调整页面结构</td></tr>
+</tbody>
+</table>
+</div>
+<p>本期新增或调整的操作入口必须放置在设备树或中央平面图原有区域内，不得为此新增页面层级、顶部区域、独立侧栏或额外任务页签。</p>
+<p>选择其他设备空间时，仅联动切换中央平面图及其测点数据；其他原有页面区域继续按照原有逻辑响应当前上下文。</p>
+<figure class="prd-figure">
+<img src="prd-assets/device-location/01-page-overview.png" alt="设备位置管理页面整体结构" loading="eager">
+<figcaption>图 5.1-1　设备位置管理页面结构与本期改造范围</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="514-数据来源与对象关系" data-section="5.1.4 数据来源与对象关系">
+<header class="section-heading">
+<span class="section-number">5.1.4</span>
+<h2>数据来源与对象关系</h2>
+</header>
+<pre class="relationship-map" data-language="text"><code>【51018】设备环境树
+        ↓ 提供设备空间及层级
+设备位置管理
+        ↑ 同步
+采集站管理：采集站 → 摄像机 → 取景来源 → 算法指标
+        ↓
+音视频算法测点 → 平面坐标 → 巡检区域详情展示</code></pre>
+<h3 class="rule-heading">核心数据规则如下：</h3>
+<ol class="step-list"><li>所有进入设备位置管理的巡检测点，类型固定为“音视频测点”，用户不可修改。</li><li>摄像机、预置位、协议、状态和算法均来源于采集站管理，在位置管理中只读。</li><li>一个测点必须且只能对应一个算法。</li><li>同一取景来源可以包含多个测点，每个测点只对应一个算法。</li><li>测点唯一性使用测点标识判断，不使用展示名称去重。</li><li>系统内部可保存英文源 ID，但图面、详情和清单以中文测点名称为主。</li><li>测点坐标采用相对平面图宽高的百分比坐标，避免画布缩放或分辨率变化造成位置偏移。</li></ol>
+<div class="table-wrap" role="region" aria-label="数据、权威来源、位置管理是否可编辑" tabindex="0">
+<table>
+<thead><tr><th scope="col">数据</th><th scope="col">权威来源</th><th scope="col">位置管理是否可编辑</th></tr></thead>
+<tbody>
+<tr><th scope="row">设备空间及层级</th><td>【51018】设备环境</td><td>可维护结构，不重新定义标识</td></tr>
+<tr><th scope="row">平面图资源</th><td>设备位置管理</td><td>可上传、替换</td></tr>
+<tr><th scope="row">测点、摄像机、预置位</th><td>采集站管理</td><td>否</td></tr>
+<tr><th scope="row">测点类型</th><td>固定为音视频测点</td><td>否</td></tr>
+<tr><th scope="row">唯一算法</th><td>采集站管理</td><td>否</td></tr>
+<tr><th scope="row">X/Y 坐标</th><td>设备位置管理</td><td>是</td></tr>
+<tr><th scope="row">实时状态及算法结果</th><td>实时数据服务</td><td>否</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="doc-section" id="515-设备空间树维护" data-section="5.1.5 设备空间树维护">
+<header class="section-heading">
+<span class="section-number">5.1.5</span>
+<h2>设备空间树维护</h2>
+</header>
+<p>设备位置管理复用【51018】设备环境树的层级、节点标识和结构维护能力，但不加载全量设备，形成面向火电厂音视频巡检的业务子树。</p>
+<h3 class="rule-heading">设备树保留：</h3>
+<ul class="rule-list"><li>火电厂项目、电厂、组织和设备空间等必要祖先节点。</li><li>锅炉、汽机、输煤、脱硫和电气系统下与音视频巡检有关的设备空间。</li><li>锅炉房、炉顶设备层、燃烧器层、磨煤机层、空预器设备间、送风机层、汽轮机房、给水泵房、皮带机廊道、转运站、碎煤机室、吸收塔设备间和电气设备间等火电场景节点。</li><li>上述设备下的音视频测点及算法测点。</li></ul>
+<h3 class="rule-heading">设备树排除：</h3>
+<ul class="rule-list"><li>纯振动传感器及其测点。</li><li>接触式温度传感器及其测点。</li><li>仅采集压力、电流、电压、流量等非音视频信号的设备及测点。</li><li>与音视频巡检无关的其他监测设备。</li><li>矿山、选煤厂、仓储、物流、通用生产线及测试/演示场景中的设备和节点。</li></ul>
+<h3 class="rule-heading">过滤以设备类型、媒体能力和测点类型为准，不以算法名称判断。例如：</h3>
+<ul class="rule-list"><li>红外摄像机的“温升检测测点”属于音视频测点，需要保留。</li><li>振动传感器的“轴承振动测点”属于非音视频测点，需要排除。</li></ul>
+<p>同一火电设备空间同时存在音视频和其他监测设备时，仅展示音视频巡检相关设备和测点。树节点数量、搜索结果、空间统计和待定位数量均按过滤后的火电音视频对象计算。</p>
+<p>当前空间没有音视频巡检设备时，展示“暂无音视频巡检设备”，不得使用振动等其他设备填充。</p>
+<h3 class="rule-heading">设备空间树支持：</h3>
+<ul class="rule-list"><li>名称或编码搜索。</li><li>新增、剪切、复制、粘贴。</li><li>重命名、上移和下移。</li><li>删除空空间。</li></ul>
+<h3 class="rule-heading">结构维护规则：</h3>
+<ul class="rule-list"><li>根节点不可删除、剪切、复制或重命名。</li><li>存在子空间、平面图、音视频设备或测点位置关系的空间不可直接删除。</li><li>新增空间默认没有平面图，不继承其他空间的底图或测点位置。</li><li>结构修改后进入页面草稿状态，保存配置后形成平台版本。</li></ul>
+<figure class="prd-figure prd-figure--narrow">
+<img src="prd-assets/device-location/02-device-tree.png" alt="火电音视频设备空间树" loading="lazy">
+<figcaption>图 5.1-2　火电音视频设备空间树及空间结构维护入口</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="516-平面图配置" data-section="5.1.6 平面图配置">
+<header class="section-heading">
+<span class="section-number">5.1.6</span>
+<h2>平面图配置</h2>
+</header>
+<p>每个设备空间独立维护一张 2D 平面图。</p>
+<h3 class="rule-heading">具体规则：</h3>
+<ul class="rule-list"><li>未配置时，中央画布显示当前空间专属上传入口。</li><li>支持 PNG、JPG/JPEG、WebP、SVG 格式；大小限制沿用平台文件服务配置，并在上传入口明确展示。</li><li>上传成功后立即预览，但仅写入页面草稿。</li><li>支持替换已有平面图。</li><li>替换平面图时默认保留原有归一化坐标；若图片比例发生明显变化，提示交付人员重新核对测点位置。</li><li>上传失败时保留原平面图，并说明格式、大小或网络失败原因。</li><li>平面图应以平台文件资源 ID 持久化，不能依赖浏览器本地 Data URL。</li><li>切换设备空间后，不得显示或继承其他空间的平面图。</li></ul>
+<figure class="prd-figure">
+<img src="prd-assets/device-location/03-floor-plan.png" alt="当前设备空间平面图" loading="lazy">
+<figcaption>图 5.1-3　当前设备空间平面图与测点标记</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="517-测点同步落位与自动分组" data-section="5.1.7 测点同步、落位与自动分组">
+<header class="section-heading">
+<span class="section-number">5.1.7</span>
+<h2>测点同步、落位与自动分组</h2>
+</header>
+<p>进入页面及点击“刷新同步”时，系统读取采集站管理中已保存的摄像机—取景来源—算法目录。</p>
+<h3 class="rule-heading">同步规则：</h3>
+<ul class="rule-list"><li>仅同步设备类型或测点类型属于音视频巡检范围的数据。</li><li>新增测点加入对应设备空间，初始状态为“待定位”。</li><li>已有测点刷新名称、设备状态、预置位和算法信息，并保留已有空间归属及坐标。</li><li>同一取景来源可以包含多个测点，每个测点只携带一个算法。</li><li>重复测点按测点标识去重，不重复生成位置记录。</li><li>来源删除或失效时，标记为“来源失效”，保存前提示交付人员处理。</li><li>没有唯一算法的测点进入阻断状态，不可作为完整配置发布。</li></ul>
+<aside class="callout callout-important">
+<span class="callout-icon" aria-hidden="true">i</span>
+<p>页面固定保留唯一的“自动分组”按钮。</p>
+</aside>
+<p>点击后，系统按照以下组合键将同一巡检位下的多个测点自动分为一组：</p>
+<pre class="relationship-map" data-language="text"><code>采集站标识 + 摄像机标识 + 内部巡检位标识</code></pre>
+<h3 class="rule-heading">自动分组规则：</h3>
+<ul class="rule-list"><li>每个算法仍是独立测点，一个测点只对应一个算法。</li><li>自动分组只改变图面标记的聚合展示和位置联动，不改变测点、算法及采集站来源关系。</li><li>同一巡检位下的多个测点自动分为一组。</li><li>不允许跨采集站、跨摄像机或跨巡检位合并。</li><li>聚合标记展示代表测点名称和组内测点数量。</li><li>聚合状态取组内最高严重等级：报警、预警、正常、离线。</li><li>悬停聚合标记时，逐项展示组内各测点的名称、唯一算法和实时结果。</li><li>拖动、清除或重新定位聚合标记时，组内测点同步更新位置。</li><li>未分组测点保持一个测点一个标记，并独立定位。</li><li>刷新采集站测点后重新计算自动分组，同时保留已有位置。</li></ul>
+<aside class="callout callout-caution">
+<span class="callout-icon" aria-hidden="true">!</span>
+<p>不得提供创建分组、选择成员、改名、拆组或跨巡检位合并等手工分组能力。</p>
+</aside>
+<figure class="prd-figure">
+<img src="prd-assets/device-location/04-auto-group.png" alt="同一巡检位测点自动分组" loading="lazy">
+<figcaption>图 5.1-4　同一巡检位多个测点的自动分组结果</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="518-测点位置编辑" data-section="5.1.8 测点位置编辑">
+<header class="section-heading">
+<span class="section-number">5.1.8</span>
+<h2>测点位置编辑</h2>
+</header>
+<p>点击“测点位置修改”进入位置编辑态。</p>
+<h3 class="rule-heading">编辑态只保留以下操作：</h3>
+<ul class="rule-list"><li>保存位置。</li><li>清除选中位置。</li><li>取消编辑。</li></ul>
+<h3 class="rule-heading">交互规则：</h3>
+<ol class="step-list"><li>在设备树或测点清单中选择待定位测点。</li><li>点击平面图生成对应标记。</li><li>已定位标记支持按住拖动，拖动过程中实时跟随。</li><li>点击标记后再次点击平面图，可重新指定位置。</li><li>清除位置后，测点恢复为“待定位”。</li><li>自动组标记移动或清除时，组内测点同步更新坐标。</li><li>取消编辑恢复进入编辑态前的全部位置。</li><li>“保存位置”只写入页面草稿；顶部“保存配置”才生成平台已保存版本。</li><li>编辑期间禁止切换空间或进入其他配置页签，必须先保存或取消编辑。</li></ol>
+<figure class="prd-figure">
+<img src="prd-assets/device-location/05-position-edit.png" alt="测点位置编辑状态" loading="lazy">
+<figcaption>图 5.1-5　测点位置编辑及三项编辑操作</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="519-图面标记" data-section="5.1.9 图面标记">
+<header class="section-heading">
+<span class="section-number">5.1.9</span>
+<h2>图面标记</h2>
+</header>
+<p>默认查看态下，测点标记采用“状态色光点＋引导线＋中文测点名称”展示。</p>
+<p>状态至少包括正常、预警、报警、离线和待定位，除颜色外应同时提供文字或可访问说明。</p>
+<p>鼠标悬停或键盘聚焦标记时，临时展示实时数据浮层：</p>
+<ul class="rule-list"><li>测点名称及唯一算法。</li><li>实时主值和单位。</li><li>算法结果说明。</li><li>置信度；数值型算法无置信度时展示阈值或趋势。</li><li>数据更新时间。</li></ul>
+<p>自动组浮层逐项展示组内各测点的实时结果，不得将多个算法结果合并为一个结果。</p>
+<p>点击标记后的详情打开方式、详情布局、字段、按钮和后续操作完全沿用原页面，不在本次需求中调整。</p>
+<figure class="prd-figure">
+<img src="prd-assets/device-location/06-marker-realtime.png" alt="测点实时数据浮层" loading="lazy">
+<figcaption>图 5.1-6　测点标记悬停时的实时数据浮层</figcaption>
+</figure>
+</section>
+<section class="doc-section" id="5110-本期不做" data-section="5.1.10 本期不做">
+<header class="section-heading">
+<span class="section-number">5.1.10</span>
+<h2>本期不做</h2>
+</header>
+<ul class="rule-list"><li>不在位置管理中新增或删除摄像机。</li><li>不重新选择摄像机或预置位。</li><li>不新增、修改或多选算法指标。</li><li>不展示纯振动、接触式温度、压力、电流等非音视频监测设备及测点。</li><li>不维护 3D 模型、区域框或空间分区。</li><li>不提供手工测点分组。</li><li>不配置巡检路线、执行顺序、启停、停留时长和任务调度。</li><li>不使用跨设备空间的厂区总貌图。</li></ul>
+</section>
+<section class="doc-section" id="5111-核心验收用例" data-section="5.1.11 核心验收用例">
+<header class="section-heading">
+<span class="section-number">5.1.11</span>
+<h2>核心验收用例</h2>
+</header>
+<div class="table-wrap" role="region" aria-label="用例、预期结果" tabindex="0">
+<table>
+<thead><tr><th scope="col">用例</th><th scope="col">预期结果</th></tr></thead>
+<tbody>
+<tr><th scope="row">原页面结构回归</th><td>除左侧设备树和中央平面图外，顶部、页签、测点详情、右侧功能区及其他原有页面区域与改造前保持一致</td></tr>
+<tr><th scope="row">火电音视频设备树过滤</th><td>树、搜索结果、节点计数和空间统计仅包含火电厂音视频巡检对象；不出现纯振动等非音视频设备，也不出现矿山、仓储、通用产线或测试场景；红外热成像、音频巡检等设备正常保留</td></tr>
+<tr><th scope="row">切换设备空间</th><td>底图、测点、统计和详情同步切换，无数据串用</td></tr>
+<tr><th scope="row">重复刷新同步</th><td>不生成重复测点，已有坐标保持不变</td></tr>
+<tr><th scope="row">同一取景来源多个测点</th><td>各测点独立存在，且每个测点只对应一个算法</td></tr>
+<tr><th scope="row">执行自动分组</th><td>同一巡检位下的多个测点聚合为一个标记，来源关系保持不变</td></tr>
+<tr><th scope="row">自动组位置联动</th><td>移动、清除或重新定位聚合标记时，组内测点同步更新</td></tr>
+<tr><th scope="row">新同步测点</th><td>初始为待定位，不自动生成坐标</td></tr>
+<tr><th scope="row">拖动测点标记</th><td>标记实时跟随，松开后更新页面草稿</td></tr>
+<tr><th scope="row">取消位置编辑</th><td>恢复进入编辑态前的全部坐标</td></tr>
+<tr><th scope="row">删除非空空间</th><td>阻止删除并展示依赖原因</td></tr>
+<tr><th scope="row">采集站管理中的测点状态变化</th><td>图面和详情状态同步更新，位置不丢失</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+    </main>
+  </div>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="返回顶部">↑</button>
+
+  <script>
+    (function () {
+      var body = document.body;
+      var menuButton = document.getElementById("menu-button");
+      var overlay = document.getElementById("nav-overlay");
+      var printButton = document.getElementById("print-button");
+      var progress = document.getElementById("reading-progress");
+      var backToTop = document.getElementById("back-to-top");
+      var tocLinks = Array.prototype.slice.call(document.querySelectorAll(".toc-link"));
+      var sections = Array.prototype.slice.call(document.querySelectorAll(".doc-section"));
+
+      function setNavigation(open) {
+        body.classList.toggle("nav-open", open);
+        menuButton.setAttribute("aria-expanded", String(open));
+      }
+
+      function updateScrollState() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var percent = scrollHeight > 0 ? Math.min(100, Math.max(0, scrollTop / scrollHeight * 100)) : 0;
+        progress.style.width = percent + "%";
+        backToTop.classList.toggle("visible", scrollTop > 520);
+      }
+
+      menuButton.addEventListener("click", function () {
+        setNavigation(!body.classList.contains("nav-open"));
+      });
+
+      overlay.addEventListener("click", function () {
+        setNavigation(false);
+      });
+
+      printButton.addEventListener("click", function () {
+        window.print();
+      });
+
+      backToTop.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      tocLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+          setNavigation(false);
+        });
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") setNavigation(false);
+      });
+
+      if ("IntersectionObserver" in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          var visible = entries
+            .filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+          if (!visible.length) return;
+          var currentId = visible[0].target.id;
+          tocLinks.forEach(function (link) {
+            var active = link.getAttribute("href") === "#" + currentId;
+            link.classList.toggle("active", active);
+            if (active) link.setAttribute("aria-current", "true");
+            else link.removeAttribute("aria-current");
+          });
+        }, { rootMargin: "-18% 0px -68% 0px", threshold: [0, 0.05] });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+
+      window.addEventListener("scroll", updateScrollState, { passive: true });
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 960) setNavigation(false);
+      });
+      updateScrollState();
+    })();
+  </script>
+  <script src="scripts/prd-annotations.js"></script>
+</body>
+</html>

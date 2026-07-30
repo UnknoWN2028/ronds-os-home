@@ -1,0 +1,545 @@
+:root {
+  --annotation-accent: #b7791f;
+  --annotation-accent-strong: #8a5a10;
+  --annotation-highlight: rgba(255, 218, 107, 0.62);
+  --annotation-panel-width: 380px;
+}
+
+.annotation-count {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--annotation-accent);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.annotation-count[data-empty="true"] {
+  color: var(--ink-500, #667085);
+  background: #edf1f5;
+}
+
+.annotation-overlay {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: block;
+  border: 0;
+  background: rgba(5, 20, 36, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+body.annotation-open .annotation-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.annotation-panel {
+  position: fixed;
+  z-index: 70;
+  top: 0;
+  right: 0;
+  width: min(var(--annotation-panel-width), 100vw);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink-900, #17212f);
+  background: #f8fafc;
+  border-left: 1px solid #d9e2ec;
+  box-shadow: -18px 0 48px rgba(7, 24, 42, 0.18);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition: transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+body.annotation-open .annotation-panel {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.2s ease;
+}
+
+.annotation-panel__header {
+  display: flex;
+  min-height: 64px;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px 13px 20px;
+  border-bottom: 1px solid #dfe6ee;
+  background: #fff;
+}
+
+.annotation-panel__heading {
+  min-width: 0;
+}
+
+.annotation-panel__heading strong,
+.annotation-panel__heading span {
+  display: block;
+}
+
+.annotation-panel__heading strong {
+  font-size: 16px;
+}
+
+.annotation-panel__heading span {
+  margin-top: 1px;
+  color: var(--ink-500, #667085);
+  font-size: 11px;
+}
+
+.annotation-icon-button {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #d7e0e9;
+  border-radius: 9px;
+  color: var(--ink-600, #475467);
+  background: #fff;
+  font: inherit;
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.annotation-icon-button:hover {
+  color: var(--ink-900, #17212f);
+  border-color: #9eb2c7;
+  background: #f4f7fa;
+}
+
+.annotation-panel__tools {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e5ebf1;
+  background: #fff;
+}
+
+.annotation-mini-button {
+  min-height: 32px;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 11px;
+  border: 1px solid #d6e0e9;
+  border-radius: 8px;
+  color: var(--ink-700, #344054);
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.annotation-mini-button:hover:not(:disabled) {
+  border-color: #9bb1c7;
+  background: #f4f7fa;
+}
+
+.annotation-mini-button:disabled {
+  color: #98a2b3;
+  background: #f2f4f7;
+  cursor: not-allowed;
+}
+
+.annotation-mini-button--primary {
+  color: #fff;
+  border-color: var(--blue-700, #155eef);
+  background: var(--blue-700, #155eef);
+}
+
+.annotation-mini-button--primary:hover:not(:disabled) {
+  color: #fff;
+  border-color: #0f4fd4;
+  background: #0f4fd4;
+}
+
+.annotation-storage-note {
+  margin: 0;
+  padding: 10px 20px;
+  color: var(--ink-500, #667085);
+  background: #f8fafc;
+  border-bottom: 1px solid #e7edf3;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.annotation-storage-note.is-warning {
+  color: #8a5a10;
+  background: #fff8e7;
+}
+
+.annotation-composer {
+  margin: 14px 16px 0;
+  padding: 15px;
+  border: 1px solid #d8e2ec;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(11, 32, 55, 0.08);
+}
+
+.annotation-composer[hidden] {
+  display: none;
+}
+
+.annotation-composer h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.annotation-composer__quote,
+.annotation-card__quote {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #73510f;
+  background: #fff8dc;
+  border-left: 3px solid #e4b23d;
+}
+
+.annotation-composer__quote {
+  max-height: 96px;
+  padding: 9px 10px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.annotation-composer label {
+  display: block;
+  margin: 12px 0 6px;
+  color: var(--ink-700, #344054);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.annotation-composer textarea {
+  width: 100%;
+  min-height: 98px;
+  resize: vertical;
+  padding: 10px 11px;
+  border: 1px solid #cfd9e4;
+  border-radius: 9px;
+  color: var(--ink-900, #17212f);
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.annotation-composer textarea:focus {
+  border-color: var(--blue-600, #2672ff);
+  outline: 3px solid rgba(38, 114, 255, 0.14);
+}
+
+.annotation-composer__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.annotation-list {
+  min-height: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 24px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #bcc9d6 transparent;
+}
+
+.annotation-empty {
+  display: grid;
+  min-height: 220px;
+  padding: 28px;
+  place-items: center;
+  align-content: center;
+  color: var(--ink-500, #667085);
+  text-align: center;
+}
+
+.annotation-empty strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-700, #344054);
+  font-size: 14px;
+}
+
+.annotation-empty span {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.annotation-card {
+  padding: 13px;
+  border: 1px solid #dfe6ee;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(11, 32, 55, 0.045);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.annotation-card.is-active {
+  border-color: #d6a532;
+  box-shadow: 0 0 0 3px rgba(228, 178, 61, 0.16);
+}
+
+.annotation-card.is-orphaned {
+  border-color: #e5a4a4;
+}
+
+.annotation-card__meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--ink-500, #667085);
+  font-size: 11px;
+}
+
+.annotation-card__section {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--blue-700, #155eef);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.annotation-card__status {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #9f3131;
+  background: #fff0f0;
+}
+
+.annotation-card__quote {
+  max-height: 74px;
+  padding: 7px 9px;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.annotation-card__note {
+  margin: 9px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--ink-900, #17212f);
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.annotation-card__time {
+  margin-top: 9px;
+  color: #98a2b3;
+  font-size: 10px;
+}
+
+.annotation-card__actions {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid #edf1f5;
+}
+
+.annotation-card__action {
+  min-height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--blue-700, #155eef);
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.annotation-card__action:hover {
+  background: #eef5ff;
+}
+
+.annotation-card__action--danger {
+  color: #c33d3d;
+}
+
+.annotation-card__action--danger:hover {
+  background: #fff0f0;
+}
+
+.annotation-selection-action {
+  position: fixed;
+  z-index: 85;
+  display: none;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #d9a62f;
+  border-radius: 9px;
+  color: #fff;
+  background: #9b6915;
+  box-shadow: 0 10px 24px rgba(50, 36, 7, 0.2);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.annotation-selection-action.visible {
+  display: inline-flex;
+}
+
+.annotation-toast {
+  position: fixed;
+  z-index: 90;
+  right: 20px;
+  bottom: 20px;
+  max-width: min(360px, calc(100vw - 40px));
+  padding: 10px 14px;
+  border-radius: 9px;
+  color: #fff;
+  background: #17324d;
+  box-shadow: 0 10px 28px rgba(7, 24, 42, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  font-size: 12px;
+}
+
+.annotation-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.annotation-toast.is-error {
+  background: #9f3131;
+}
+
+.prd-annotation-highlight {
+  padding: 0;
+  color: inherit;
+  background: var(--annotation-highlight);
+  border-bottom: 2px solid #d39b22;
+  border-radius: 2px;
+}
+
+.prd-annotation-highlight.is-active {
+  background: rgba(255, 196, 61, 0.78);
+  outline: 2px solid rgba(183, 121, 31, 0.4);
+  outline-offset: 1px;
+}
+
+::highlight(prd-annotations) {
+  color: inherit;
+  background-color: var(--annotation-highlight);
+  text-decoration: underline 2px #d39b22;
+}
+
+::highlight(prd-annotation-active) {
+  color: inherit;
+  background-color: rgba(255, 196, 61, 0.82);
+  text-decoration: underline 2px #a96810;
+}
+
+.annotation-icon-button:focus-visible,
+.annotation-mini-button:focus-visible,
+.annotation-card__action:focus-visible,
+.annotation-selection-action:focus-visible {
+  outline: 3px solid rgba(38, 114, 255, 0.3);
+  outline-offset: 2px;
+}
+
+body.annotation-open .back-to-top {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 1100px) {
+  .annotation-overlay {
+    background: transparent;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --annotation-panel-width: 100vw;
+  }
+
+  body.annotation-open {
+    overflow: hidden;
+  }
+
+  .annotation-panel {
+    border-left: 0;
+  }
+
+  .annotation-panel__tools {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .annotation-storage-note {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .annotation-composer,
+  .annotation-list {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  .annotation-list {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annotation-overlay,
+  .annotation-panel,
+  .annotation-toast {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .annotation-overlay,
+  .annotation-panel,
+  .annotation-selection-action,
+  .annotation-toast {
+    display: none !important;
+  }
+
+  .prd-annotation-highlight {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    outline: 0;
+  }
+
+  ::highlight(prd-annotations),
+  ::highlight(prd-annotation-active) {
+    background-color: transparent;
+    text-decoration: none;
+  }
+}
